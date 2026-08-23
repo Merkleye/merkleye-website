@@ -1,0 +1,82 @@
+---
+const compose = `services:
+  merkleye:
+    image: ghcr.io/wesleykirkland/merkleye:latest
+    restart: unless-stopped
+    volumes:
+      - ./config.yaml:/etc/merkleye/config.yaml:ro
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: merkleye
+    volumes:
+      - merkleye-db:/var/lib/postgresql/data
+
+volumes:
+  merkleye-db:`;
+
+const config = `domains:
+  - name: example.com
+    expected_issuers:
+      - "Let's Encrypt"   # substring match on issuer DN/O
+      - "DigiCert"
+    watch_lookalikes: true
+
+notify:
+  slack:
+    webhook_url: \${SLACK_WEBHOOK_URL}`;
+---
+
+<section id="self-hosting" class="border-t border-(--color-border-soft) bg-(--color-surface)/40 py-24">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="max-w-2xl">
+      <p class="font-mono text-xs tracking-widest text-(--color-accent) uppercase">
+        Self-hosting
+      </p>
+      <h2 class="mt-3 text-3xl font-semibold tracking-tight text-(--color-ink) sm:text-4xl">
+        One container image, homelab to enterprise.
+      </h2>
+      <p class="mt-4 text-base leading-relaxed text-(--color-ink-muted)">
+        Same image whether it's a single container next to a Postgres
+        instance on a homelab box, or a cluster deployment with an OTel
+        collector and a full Grafana stack behind it. Configuration is code:
+        <code class="rounded bg-(--color-surface-2) px-1.5 py-0.5 font-mono text-[13px] text-(--color-ink)"
+          >config.yaml</code
+        > is the sole write authority in v1 — deliberately, to avoid drift
+        between a config file and a database or UI.
+      </p>
+    </div>
+
+    <div class="mt-12 grid gap-6 lg:grid-cols-2">
+      <div class="rounded-xl border border-(--color-border) bg-(--color-surface)">
+        <div class="flex items-center justify-between border-b border-(--color-border-soft) px-5 py-3">
+          <span class="font-mono text-xs text-(--color-ink-faint)">docker-compose.yml</span>
+        </div>
+        <pre class="overflow-x-auto p-5 font-mono text-[12.5px] leading-relaxed text-(--color-ink-muted)"><code>{compose}</code></pre>
+      </div>
+
+      <div class="rounded-xl border border-(--color-border) bg-(--color-surface)">
+        <div class="flex items-center justify-between border-b border-(--color-border-soft) px-5 py-3">
+          <span class="font-mono text-xs text-(--color-ink-faint)">config.yaml</span>
+        </div>
+        <pre class="overflow-x-auto p-5 font-mono text-[12.5px] leading-relaxed text-(--color-ink-muted)"><code>{config}</code></pre>
+      </div>
+    </div>
+
+    <div class="mt-8 flex flex-wrap items-center gap-4">
+      <a
+        href="https://github.com/wesleykirkland/merkleye"
+        class="rounded-md bg-(--color-accent) px-5 py-2.5 text-sm font-semibold text-(--color-accent-ink) transition-transform hover:scale-[1.02]"
+      >
+        Full self-hosting docs →
+      </a>
+      <span class="text-sm text-(--color-ink-faint)"
+        >docker compose up -d — that's the whole install.</span
+      >
+    </div>
+  </div>
+</section>

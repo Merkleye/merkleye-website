@@ -1,0 +1,75 @@
+---
+---
+
+<section class="border-t border-(--color-border-soft) bg-(--color-surface)/40 py-24">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="grid gap-14 lg:grid-cols-2 lg:items-center">
+      <div>
+        <p class="font-mono text-xs tracking-widest text-(--color-accent) uppercase">
+          Architecture differentiator
+        </p>
+        <h2 class="mt-3 text-3xl font-semibold tracking-tight text-(--color-ink) sm:text-4xl">
+          Firehose ingestion, not query-per-domain.
+        </h2>
+        <p class="mt-5 text-base leading-relaxed text-(--color-ink-muted)">
+          Watching lookalikes at scale means watching permutations, not just
+          domains: 20 real domains fed through <code
+            class="rounded bg-(--color-surface-2) px-1.5 py-0.5 font-mono text-[13px] text-(--color-ink)"
+            >dnstwist</code
+          > becomes roughly <strong class="text-(--color-ink)">100,000</strong> lookalike
+          variants to monitor. A query-per-domain API model needs 100,000
+          requests to sweep that set once. Merkleye doesn't query at all —
+          it tails the CT log stream continuously via SSLMate's <code
+            class="rounded bg-(--color-surface-2) px-1.5 py-0.5 font-mono text-[13px] text-(--color-ink)"
+            >certspotter</code
+          > sidecar and tests every certificate it sees against your hash set
+          in-line. That's what makes watching six figures of variants
+          architecturally tractable instead of a rate-limit problem.
+        </p>
+        <p class="mt-4 text-base leading-relaxed text-(--color-ink-muted)">
+          Global CT issuance runs roughly <strong class="text-(--color-ink)"
+            >20–30 million entries a day</strong
+          >. Merkleye discards everything that doesn't match — only matches
+          are persisted, so your storage footprint tracks your hit rate, not
+          the internet's issuance volume.
+        </p>
+      </div>
+
+      <div
+        class="rounded-xl border border-(--color-border) bg-(--color-surface) p-6 sm:p-8"
+      >
+        <div class="flex items-center justify-between font-mono text-xs text-(--color-ink-faint)">
+          <span>query-per-domain</span>
+          <span>firehose (Merkleye)</span>
+        </div>
+        <div class="mt-4 grid grid-cols-2 gap-5">
+          <div class="rounded-lg border border-(--color-border-soft) bg-(--color-surface-2) p-5">
+            <div class="font-mono text-3xl font-semibold text-(--color-danger)">100,000</div>
+            <div class="mt-1 text-xs text-(--color-ink-faint)">API requests per sweep</div>
+            <div class="mt-4 h-2 w-full rounded-full bg-(--color-border-soft)">
+              <div class="h-2 w-full rounded-full bg-(--color-danger)/70"></div>
+            </div>
+          </div>
+          <div class="rounded-lg border border-(--color-accent-dim) bg-(--color-accent)/10 p-5">
+            <div class="font-mono text-3xl font-semibold text-(--color-accent)">1</div>
+            <div class="mt-1 text-xs text-(--color-ink-faint)">continuous log stream</div>
+            <div class="mt-4 h-2 w-full rounded-full bg-(--color-border-soft)">
+              <div class="h-2 w-[3%] rounded-full bg-(--color-accent)"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-6 rounded-lg border border-(--color-border-soft) bg-(--color-surface-2)/60 p-5">
+          <div class="flex items-center justify-between text-sm">
+            <span class="text-(--color-ink-muted)">CT issuance, global</span>
+            <span class="font-mono text-(--color-ink)">~20–30M / day</span>
+          </div>
+          <div class="mt-3 flex items-center justify-between text-sm">
+            <span class="text-(--color-ink-muted)">Stored by Merkleye</span>
+            <span class="font-mono text-(--color-accent)">matches only</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

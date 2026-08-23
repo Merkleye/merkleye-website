@@ -1,0 +1,88 @@
+---
+const projects = [
+  {
+    name: "merkleye",
+    role: "Core engine",
+    href: "https://github.com/wesleykirkland/merkleye",
+    body:
+      "The watchtower itself: CT log ingestion, normalization, policy engine, scoring, and notifications. Go, Apache-2.0.",
+  },
+  {
+    name: "merkleye-ui",
+    role: "Dashboard",
+    href: "https://github.com/wesleykirkland/merkleye-ui",
+    body:
+      "A dedicated web UI for browsing findings, tuning policy, and reviewing risk scores — a separate project from this site.",
+  },
+];
+
+const roadmap = [
+  { label: "CT log ingestion", status: "done" },
+  { label: "Policy engine", status: "done" },
+  { label: "dnstwist lookalike pipeline", status: "next" },
+  { label: "Scoring & digests", status: "next" },
+  { label: "Auth & audit", status: "next" },
+  { label: "Web UI (merkleye-ui)", status: "next" },
+];
+---
+
+<section id="ecosystem" class="border-t border-(--color-border-soft) py-24">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="max-w-2xl">
+      <p class="font-mono text-xs tracking-widest text-(--color-accent) uppercase">
+        Ecosystem
+      </p>
+      <h2 class="mt-3 text-3xl font-semibold tracking-tight text-(--color-ink) sm:text-4xl">
+        Two repos, one watchtower.
+      </h2>
+    </div>
+
+    <div class="mt-12 grid gap-6 md:grid-cols-2">
+      {
+        projects.map((p) => (
+          <a
+            href={p.href}
+            class="group flex flex-col rounded-xl border border-(--color-border) bg-(--color-surface) p-7 transition-colors hover:border-(--color-accent-dim)"
+          >
+            <div class="flex items-center justify-between">
+              <span class="font-mono text-lg font-semibold text-(--color-ink)">{p.name}</span>
+              <span class="rounded-full border border-(--color-border) px-2.5 py-0.5 text-xs text-(--color-ink-faint)">
+                {p.role}
+              </span>
+            </div>
+            <p class="mt-3 flex-1 text-sm leading-relaxed text-(--color-ink-muted)">{p.body}</p>
+            <span class="mt-5 text-sm font-medium text-(--color-accent) group-hover:underline">
+              View repository →
+            </span>
+          </a>
+        ))
+      }
+    </div>
+
+    <div class="mt-14 rounded-xl border border-(--color-border-soft) bg-(--color-surface)/60 p-7">
+      <h3 class="font-mono text-xs tracking-widest text-(--color-ink-faint) uppercase">
+        Roadmap
+      </h3>
+      <ul class="mt-5 flex flex-wrap gap-3">
+        {
+          roadmap.map((r) => (
+            <li
+              class={`flex items-center gap-2 rounded-md border px-3 py-1.5 text-sm ${
+                r.status === "done"
+                  ? "border-(--color-accent-dim) bg-(--color-accent)/10 text-(--color-accent)"
+                  : "border-(--color-border) text-(--color-ink-muted)"
+              }`}
+            >
+              <span
+                class={`h-1.5 w-1.5 rounded-full ${
+                  r.status === "done" ? "bg-(--color-accent)" : "bg-(--color-ink-faint)"
+                }`}
+              />
+              {r.label}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,100 @@
+---
+const pillars = [
+  {
+    tag: "01",
+    title: "Security",
+    icon: "shield",
+    summary:
+      "Self-hosted by design — your domain list and findings never leave infrastructure you control.",
+    points: [
+      "No SaaS relay: run it on a homelab box or an enterprise cluster, same image.",
+      "Apache-2.0 and auditable — the matching and scoring logic isn't a black box you have to trust blind.",
+      "Config-as-code: config.yaml is the sole write authority in v1, so there's no UI/DB drift to reason about during an incident.",
+    ],
+  },
+  {
+    tag: "02",
+    title: "Speed",
+    icon: "bolt",
+    summary:
+      "Firehose ingestion means detection latency is bounded by CT log propagation, not by how often you remember to query.",
+    points: [
+      "Tails every RFC6962 and static-ct-api log continuously via a certspotter sidecar — no polling, no per-domain API calls.",
+      "Every certificate is tested against your hash set as it's observed, not on a batch schedule.",
+      "Notifications fire (SMTP, webhook, Discord, Slack) the moment a match clears policy — while the phishing infra is still being staged.",
+    ],
+  },
+  {
+    tag: "03",
+    title: "Accuracy",
+    icon: "target",
+    summary:
+      "Tuned to keep the signal-to-noise ratio survivable: routine renewals stay quiet, real lookalikes don't slip through.",
+    points: [
+      "Expected-issuer policy is a case-insensitive substring match on issuer DN/O — CA intermediates rotate silently, so exact match would page you on every renewal.",
+      "Dedup keys on sha256(DER), never the certificate serial — serials collide across CAs and would under-count real issuances.",
+      "Domains normalize to punycode/A-label before comparison, matching how SANs are actually encoded on the wire.",
+    ],
+  },
+];
+
+const icons: Record<string, string> = {
+  shield:
+    "M12 2 4 5v6c0 5 3.4 8.6 8 9 4.6-.4 8-4 8-9V5l-8-3Z",
+  bolt: "M13 2 4 14h6l-1 8 9-12h-6l1-8Z",
+  target:
+    "M12 2v4M12 18v4M2 12h4M18 12h4M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z",
+};
+---
+
+<section id="pillars" class="border-t border-(--color-border-soft) py-24">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="max-w-2xl">
+      <p class="font-mono text-xs tracking-widest text-(--color-accent) uppercase">
+        Why Merkleye
+      </p>
+      <h2 class="mt-3 text-3xl font-semibold tracking-tight text-(--color-ink) sm:text-4xl">
+        Built around three things a watchtower can't compromise on.
+      </h2>
+    </div>
+
+    <div class="mt-14 grid gap-6 md:grid-cols-3">
+      {
+        pillars.map((p) => (
+          <div class="group rounded-xl border border-(--color-border) bg-(--color-surface) p-7 transition-colors hover:border-(--color-accent-dim)">
+            <div class="flex items-center justify-between">
+              <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-(--color-accent)/10 text-(--color-accent)">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d={icons[p.icon]} />
+                </svg>
+              </span>
+              <span class="font-mono text-xs text-(--color-ink-faint)">{p.tag}</span>
+            </div>
+
+            <h3 class="mt-5 text-xl font-semibold text-(--color-ink)">{p.title}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-(--color-ink-muted)">{p.summary}</p>
+
+            <ul class="mt-5 space-y-3 border-t border-(--color-border-soft) pt-5">
+              {p.points.map((point) => (
+                <li class="flex gap-2.5 text-sm leading-relaxed text-(--color-ink-muted)">
+                  <span class="mt-2 h-1 w-1 shrink-0 rounded-full bg-(--color-accent)" />
+                  <span>{point}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
