@@ -48,5 +48,6 @@ jobs:
             **Preview deployed:** ${{ steps.deploy.outputs.pages-deployment-alias-url }}
 
             Commit: ${{ github.event.pull_request.head.sha }}
+            Diff: https://github.com/${{ github.repository }}/compare/main...${{ github.event.pull_request.head.sha }}
 
             This link stays the same across pushes to this PR and is removed once the PR is closed.
