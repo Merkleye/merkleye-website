@@ -13,7 +13,7 @@ project.
 
 ## Development
 
-Requires Node.js 20+.
+Requires Node.js 24+.
 
 ```bash
 npm install
