@@ -24,6 +24,7 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
+      statuses: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
@@ -67,6 +68,7 @@ jobs:
           configPath: ./.github/lighthouserc.json
           uploadArtifacts: true
           temporaryPublicStorage: true
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Format Lighthouse results
         id: lighthouse-report
