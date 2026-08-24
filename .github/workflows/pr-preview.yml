@@ -32,6 +32,10 @@ jobs:
       - run: npm ci
       - run: npm run build
 
+      - name: Record deploy time
+        id: timestamp
+        run: echo "now=$(date -u +'%Y-%m-%d %H:%M:%S UTC')" >> "$GITHUB_OUTPUT"
+
       - name: Deploy preview to Cloudflare Pages
         id: deploy
         uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4
@@ -48,6 +52,7 @@ jobs:
             **Preview deployed:** ${{ steps.deploy.outputs.pages-deployment-alias-url }}
 
             Commit: ${{ github.event.pull_request.head.sha }}
-            Diff: https://github.com/${{ github.repository }}/compare/main...${{ github.head_ref }}
+            Diff: https://github.com/${{ github.repository }}/compare/main...${{ github.event.pull_request.head.sha }}
+            Last updated: ${{ steps.timestamp.outputs.now }}
 
             This link stays the same across pushes to this PR and is removed once the PR is closed.
