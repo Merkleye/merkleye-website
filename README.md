@@ -48,6 +48,18 @@ it once under **Settings → Pages → Source: GitHub Actions**.
 Cloudflare Pages is the recommended production host long-term; see
 [`docs/DESIGN.md`](docs/DESIGN.md) for why and how to switch.
 
+### PR previews
+
+Every PR against `main` is built and deployed to its own Cloudflare Pages
+preview branch (`pr-<number>`), with the preview URL posted as a comment on
+the PR (`.github/workflows/pr-preview.yml`). The preview is torn down when
+the PR closes (`pr-preview-cleanup.yml`), with a daily scheduled job pruning
+any preview older than 7 days as a safety net (`pr-preview-prune.yml`).
+
+Requires `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` repo secrets
+(same ones used for the production deploy). Previews don't build for PRs
+from forks, since `pull_request` runs from forks don't get repo secrets.
+
 ## License
 
 Apache-2.0, matching the core [Merkleye](https://github.com/wesleykirkland/merkleye)
