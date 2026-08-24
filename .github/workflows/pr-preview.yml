@@ -20,7 +20,7 @@ concurrency:
 jobs:
   deploy-preview:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     permissions:
       contents: read
       pull-requests: write
@@ -53,3 +53,67 @@ jobs:
             Last updated: ${{ steps.timestamp.outputs.now }}
 
             This link stays the same across pushes to this PR and is removed once the PR is closed.
+
+      # Runs after the sticky preview-link comment above so that comment keeps
+      # its own header/thread; Lighthouse gets its own sticky comment below.
+      # continue-on-error lets the job keep going so the comment step (and the
+      # explicit failure step after it) still run when thresholds aren't met.
+      - name: Run Lighthouse CI against the preview
+        id: lighthouse
+        continue-on-error: true
+        uses: treosh/lighthouse-ci-action@3e7e23fb74242897f95c0ba9cabad3d0227b9b18 # 12.6.2
+        with:
+          urls: ${{ steps.deploy.outputs.pages-deployment-alias-url }}
+          configPath: ./.github/lighthouserc.json
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+
+      - name: Format Lighthouse results
+        id: lighthouse-report
+        if: always()
+        env:
+          LHCI_MANIFEST: ${{ steps.lighthouse.outputs.manifest }}
+          LHCI_LINKS: ${{ steps.lighthouse.outputs.links }}
+        run: |
+          {
+            echo 'summary<<LHCI_EOF'
+            if [ -n "$LHCI_MANIFEST" ]; then
+              echo '| Category | Score |'
+              echo '| --- | --- |'
+              echo "$LHCI_MANIFEST" | jq -r '
+                .[] | select(.isRepresentativeRun) | .summary
+                | to_entries | map(select(.key != "pwa"))
+                | .[] | "| \(.key) | \((.value * 100) | round)% |"
+              '
+            else
+              echo '_Lighthouse did not produce results — see the job logs._'
+            fi
+            echo LHCI_EOF
+          } >> "$GITHUB_OUTPUT"
+
+          {
+            echo 'report_url<<LHCI_EOF'
+            if [ -n "$LHCI_LINKS" ]; then
+              echo "$LHCI_LINKS" | jq -r 'to_entries[0].value // ""'
+            fi
+            echo LHCI_EOF
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Comment Lighthouse results on PR
+        if: always()
+        uses: marocchino/sticky-pull-request-comment@5770ad5eb8f42dd2c4f34da00c94c5381e49af88 # v3.0.5
+        with:
+          header: lighthouse
+          message: |
+            **Lighthouse CI:** ${{ steps.lighthouse.outcome == 'success' && '✅ all categories met the 0.9 minimum' || '❌ one or more categories missed the 0.9 minimum' }}
+
+            ${{ steps.lighthouse-report.outputs.summary }}
+
+            ${{ steps.lighthouse-report.outputs.report_url != '' && format('[Full Lighthouse report]({0})', steps.lighthouse-report.outputs.report_url) || '' }}
+
+            Commit: ${{ github.event.pull_request.head.sha }}
+            Thresholds: [`.github/lighthouserc.json`](https://github.com/${{ github.repository }}/blob/main/.github/lighthouserc.json)
+
+      - name: Fail if Lighthouse thresholds were not met
+        if: steps.lighthouse.outcome == 'failure'
+        run: exit 1
