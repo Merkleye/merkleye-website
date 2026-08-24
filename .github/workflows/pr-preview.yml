@@ -1,0 +1,52 @@
+name: PR Preview
+
+# Builds every PR against main and deploys it to a per-PR Cloudflare Pages
+# preview branch (pr-<number>), then comments the preview URL on the PR.
+#
+# Note: secrets aren't available to `pull_request` runs triggered from a
+# fork, so previews only build for branches pushed to this repo (including
+# Renovate). If external fork PRs become common, this needs to split into a
+# secret-less build + a `workflow_run`-triggered deploy instead.
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+
+concurrency:
+  group: pr-preview-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  deploy-preview:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      # Utilize mise for CI and local
+      - uses: jdx/mise-action@3c2e0cf82a5b2e5249f0d3635a4d83d0ae861518 # v4.2.5
+
+      - run: npm ci
+      - run: npm run build
+
+      - name: Deploy preview to Cloudflare Pages
+        id: deploy
+        uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=merkleye-website --branch=pr-${{ github.event.pull_request.number }}
+
+      - name: Comment preview link on PR
+        uses: marocchino/sticky-pull-request-comment@5770ad5eb8f42dd2c4f34da00c94c5381e49af88 # v3.0.5
+        with:
+          header: pr-preview
+          message: |
+            **Preview deployed:** ${{ steps.deploy.outputs.pages-deployment-alias-url }}
+
+            Commit: ${{ github.event.pull_request.head.sha }}
+
+            This link stays the same across pushes to this PR and is removed once the PR is closed.
