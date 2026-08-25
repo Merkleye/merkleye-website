@@ -59,12 +59,16 @@ jobs:
       # its own header/thread; Lighthouse gets its own sticky comment below.
       # continue-on-error lets the job keep going so the comment step (and the
       # explicit failure step after it) still run when thresholds aren't met.
-      - name: Run Lighthouse CI against the preview
+      #
+      # Audits the local dist/ build rather than the live preview URL: Cloudflare
+      # Pages sends `X-Robots-Tag: noindex` on preview (*.pages.dev) deployments,
+      # which fails Lighthouse's is-crawlable SEO audit regardless of site content.
+      - name: Run Lighthouse CI against the build
         id: lighthouse
         continue-on-error: true
         uses: treosh/lighthouse-ci-action@3e7e23fb74242897f95c0ba9cabad3d0227b9b18 # 12.6.2
         with:
-          urls: ${{ steps.deploy.outputs.pages-deployment-alias-url }}
+          staticDistDir: ./dist
           configPath: ./.github/lighthouserc.json
           uploadArtifacts: true
           temporaryPublicStorage: true
