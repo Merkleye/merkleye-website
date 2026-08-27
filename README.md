@@ -56,6 +56,11 @@ the PR (`.github/workflows/pr-preview.yml`). The preview is torn down when
 the PR closes (`pr-preview-cleanup.yml`), with a daily scheduled job pruning
 any preview older than 7 days as a safety net (`pr-preview-prune.yml`).
 
+Each preview also gets audited with [Lighthouse CI](https://github.com/treosh/lighthouse-ci-action)
+against the deployed URL (thresholds in `.github/lighthouserc.json`). The PR
+fails if Performance, Accessibility, Best Practices, or SEO drops below 0.9;
+scores are posted as their own sticky comment on the PR.
+
 Requires `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` repo secrets
 (same ones used for the production deploy). Previews don't build for PRs
 from forks, since `pull_request` runs from forks don't get repo secrets.

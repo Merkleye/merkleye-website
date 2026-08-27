@@ -20,14 +20,18 @@ concurrency:
 jobs:
   deploy-preview:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     permissions:
       contents: read
+      packages: read
       pull-requests: write
+      statuses: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - uses: ./.github/actions/build-site
+        with:
+          npm-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Record deploy time
         id: timestamp
@@ -53,3 +57,130 @@ jobs:
             Last updated: ${{ steps.timestamp.outputs.now }}
 
             This link stays the same across pushes to this PR and is removed once the PR is closed.
+
+      # Runs after the sticky preview-link comment above so that comment keeps
+      # its own header/thread; Lighthouse gets its own sticky comment below.
+      # continue-on-error lets the job keep going so the comment step (and the
+      # explicit failure step after it) still run when thresholds aren't met.
+      #
+      # Audits the local dist/ build rather than the live preview URL: Cloudflare
+      # Pages sends `X-Robots-Tag: noindex` on preview (*.pages.dev) deployments,
+      # which fails Lighthouse's is-crawlable SEO audit regardless of site content.
+      #
+      # Runs once per theme: the config's puppeteerScript
+      # (.github/lighthouse/set-theme.js) forces the site's own dark/light
+      # localStorage setting before each collect run, keyed off LHCI_THEME,
+      # so both themes get audited instead of just whatever the runner's
+      # default color scheme happens to be.
+      #
+      # Using puppeteerScript means LHCI drives its own Puppeteer browser
+      # instead of chrome-launcher, so lighthouserc.json points chromePath
+      # at the runner image's preinstalled Chrome and moves the sandbox
+      # flags to puppeteerLaunchOptions.args (collect.settings.chromeFlags
+      # is silently ignored once puppeteerScript is set). puppeteer-core is
+      # a devDependency purely so `require('puppeteer-core')` resolves from
+      # the repo root — LHCI never imports it directly in our code.
+      - name: Run Lighthouse CI (dark theme)
+        id: lighthouse-dark
+        continue-on-error: true
+        uses: treosh/lighthouse-ci-action@3e7e23fb74242897f95c0ba9cabad3d0227b9b18 # 12.6.2
+        env:
+          LHCI_THEME: dark
+        with:
+          configPath: ./.github/lighthouserc.json
+          uploadArtifacts: true
+          artifactName: lighthouse-results-dark
+          temporaryPublicStorage: true
+
+      - name: Run Lighthouse CI (light theme)
+        id: lighthouse-light
+        continue-on-error: true
+        uses: treosh/lighthouse-ci-action@3e7e23fb74242897f95c0ba9cabad3d0227b9b18 # 12.6.2
+        env:
+          LHCI_THEME: light
+        with:
+          configPath: ./.github/lighthouserc.json
+          uploadArtifacts: true
+          artifactName: lighthouse-results-light
+          temporaryPublicStorage: true
+
+      - name: Format Lighthouse results
+        id: lighthouse-report
+        if: always()
+        env:
+          LHCI_MANIFEST_DARK: ${{ steps.lighthouse-dark.outputs.manifest }}
+          LHCI_LINKS_DARK: ${{ steps.lighthouse-dark.outputs.links }}
+          LHCI_MANIFEST_LIGHT: ${{ steps.lighthouse-light.outputs.manifest }}
+          LHCI_LINKS_LIGHT: ${{ steps.lighthouse-light.outputs.links }}
+        run: |
+          format_summary() {
+            local manifest="$1"
+            if [ -n "$manifest" ]; then
+              echo '| Category | Score |'
+              echo '| --- | --- |'
+              echo "$manifest" | jq -r '
+                .[] | select(.isRepresentativeRun) | .summary
+                | to_entries | map(select(.key != "pwa"))
+                | .[] | "| \(.key) | \((.value * 100) | round)% |"
+              '
+            else
+              echo '_Lighthouse did not produce results — see the job logs._'
+            fi
+          }
+          report_url() {
+            local links="$1"
+            if [ -n "$links" ]; then
+              echo "$links" | jq -r 'to_entries[0].value // ""'
+            fi
+          }
+
+          {
+            echo 'summary_dark<<LHCI_EOF'
+            format_summary "$LHCI_MANIFEST_DARK"
+            echo LHCI_EOF
+          } >> "$GITHUB_OUTPUT"
+
+          {
+            echo 'summary_light<<LHCI_EOF'
+            format_summary "$LHCI_MANIFEST_LIGHT"
+            echo LHCI_EOF
+          } >> "$GITHUB_OUTPUT"
+
+          {
+            echo 'report_url_dark<<LHCI_EOF'
+            report_url "$LHCI_LINKS_DARK"
+            echo LHCI_EOF
+          } >> "$GITHUB_OUTPUT"
+
+          {
+            echo 'report_url_light<<LHCI_EOF'
+            report_url "$LHCI_LINKS_LIGHT"
+            echo LHCI_EOF
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Comment Lighthouse results on PR
+        if: always()
+        uses: marocchino/sticky-pull-request-comment@5770ad5eb8f42dd2c4f34da00c94c5381e49af88 # v3.0.5
+        with:
+          header: lighthouse
+          message: |
+            **Lighthouse CI:** ${{ (steps.lighthouse-dark.outcome == 'success' && steps.lighthouse-light.outcome == 'success') && '✅ all categories met the 0.9 minimum in both themes' || '❌ one or more categories missed the 0.9 minimum' }}
+
+            **Dark theme** — ${{ steps.lighthouse-dark.outcome == 'success' && '✅' || '❌' }}
+
+            ${{ steps.lighthouse-report.outputs.summary_dark }}
+
+            ${{ steps.lighthouse-report.outputs.report_url_dark != '' && format('[Full report]({0})', steps.lighthouse-report.outputs.report_url_dark) || '' }}
+
+            **Light theme** — ${{ steps.lighthouse-light.outcome == 'success' && '✅' || '❌' }}
+
+            ${{ steps.lighthouse-report.outputs.summary_light }}
+
+            ${{ steps.lighthouse-report.outputs.report_url_light != '' && format('[Full report]({0})', steps.lighthouse-report.outputs.report_url_light) || '' }}
+
+            Commit: ${{ github.event.pull_request.head.sha }}
+            Thresholds: [`.github/lighthouserc.json`](https://github.com/${{ github.repository }}/blob/main/.github/lighthouserc.json)
+
+      - name: Fail if Lighthouse thresholds were not met
+        if: steps.lighthouse-dark.outcome == 'failure' || steps.lighthouse-light.outcome == 'failure'
+        run: exit 1

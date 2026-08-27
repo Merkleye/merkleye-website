@@ -15,6 +15,7 @@ jobs:
     timeout-minutes: 10
     permissions:
       contents: read
+      packages: read
     environment:
       name: prd
       url: ${{ steps.deploy.outputs.deployment-url }}
@@ -22,6 +23,8 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - uses: ./.github/actions/build-site
+        with:
+          npm-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish to Cloudflare Pages
         id: deploy
