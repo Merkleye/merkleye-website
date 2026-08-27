@@ -3,7 +3,7 @@
     "collect": {
       "staticDistDir": "./dist",
       "numberOfRuns": 3,
-      "puppeteerScript": "./.github/lighthouse/set-theme.js",
+      "puppeteerScript": "./.github/lighthouse/set-theme.cjs",
       "chromePath": "/usr/bin/google-chrome-stable",
       "puppeteerLaunchOptions": {
         "args": ["--disable-gpu", "--no-sandbox", "--no-zygote"]
