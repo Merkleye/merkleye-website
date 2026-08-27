@@ -1,0 +1,18 @@
+# Merkleye vulnerability disclosure — RFC 9116
+# Full policy: https://merkleye.com/legal/security/
+
+Contact: mailto:security@merkleye.com
+Contact: https://merkleye.com/legal/security/
+Policy: https://merkleye.com/legal/security/
+Preferred-Languages: en
+
+# NOTE: Expires must be a future date and RFC 9116 requires it to be less
+# than a year out. Update it on a calendar reminder, or generate this file
+# at build time — a stale security.txt is worse than none.
+Expires: 2027-01-01T00:00:00.000Z
+
+# TODO before this is published:
+#   - publish the PGP key at /pgp.asc and uncomment Encryption
+#   - add Canonical once the production hostname is final
+# Encryption: https://merkleye.com/pgp.asc
+# Canonical: https://merkleye.com/.well-known/security.txt

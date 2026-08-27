@@ -1,0 +1,22 @@
+---
+/**
+ * Shown on every legal page until counsel has reviewed it. Remove the
+ * `draft` prop from a page's LegalLayout to hide it there, or delete this
+ * component once the whole pack is signed off.
+ */
+---
+
+<aside
+  class="mt-8 rounded-md border border-(--color-warn) bg-(--color-warn)/8 px-5 py-4"
+  role="note"
+>
+  <p class="font-mono text-xs font-semibold tracking-widest text-(--color-warn) uppercase">
+    Unreviewed draft
+  </p>
+  <p class="mt-2 text-sm leading-relaxed text-(--color-ink-muted)">
+    This page has not been reviewed by a lawyer. It is published so the
+    structure can be read and edited, and it should not be relied on as the
+    terms of any agreement. Bracketed values are placeholders that still need
+    filling in.
+  </p>
+</aside>

@@ -1,0 +1,173 @@
+---
+import LegalLayout from "../../layouts/LegalLayout.astro";
+---
+
+<LegalLayout
+  title="Privacy Policy"
+  description="What Merkleye collects, what it deliberately never receives, and why a self-hosted product changes that answer."
+  updated="[EFFECTIVE DATE]"
+>
+  <blockquote>
+    <p>
+      Merkleye runs on your infrastructure. Your monitored domains, the
+      certificates it observes, and every finding it produces stay on your
+      machines and are never transmitted to us. That is an architectural
+      property of the product, not a promise about our intentions.
+    </p>
+  </blockquote>
+
+  <p>
+    The controller of any personal data described here is
+    <span class="tbd">[ENTITY LEGAL NAME]</span>,
+    <span class="tbd">[REGISTERED ADDRESS]</span>. Contact
+    <a href="mailto:privacy@merkleye.com">privacy@merkleye.com</a>.
+  </p>
+
+  <h2>1. What we never receive</h2>
+  <p>
+    Because the software is self-hosted, we do not receive, and have no means
+    of obtaining:
+  </p>
+  <ul>
+    <li>the domains you monitor, in any form, including hashed;</li>
+    <li>
+      certificates, subject alternative names, issuers, serials, or
+      fingerprints observed by your deployment;
+    </li>
+    <li>findings, risk scores, alerts, or notification contents;</li>
+    <li>your configuration file, database, API tokens, or webhook URLs;</li>
+    <li>
+      the addresses or hostnames of any infrastructure your deployment watches
+      or runs on.
+    </li>
+  </ul>
+  <p>
+    On hashing specifically: we do not accept hashed domain names either. The
+    set of registrable domains is small enough to enumerate, so a hash of a
+    domain can be reversed by brute force and is not anonymous. Treating it as
+    though it were is a common industry error and we do not rely on it.
+  </p>
+
+  <h2>2. What we do collect</h2>
+
+  <h3>Website</h3>
+  <p>
+    This site is static and ships effectively no JavaScript. It sets
+    <strong>no cookies</strong>. Your light/dark preference is stored in your
+    browser&rsquo;s <code>localStorage</code>, never transmitted, and readable
+    only by this site.
+  </p>
+  <p>
+    Our host, <span class="tbd">[Cloudflare Pages]</span>, processes standard
+    server logs (IP address, user agent, requested path, timestamp) to serve and
+    protect the site. We use <span class="tbd">[no analytics / a
+    cookieless, non-identifying analytics product]</span>.
+  </p>
+
+  <h3>Trial requests and enquiries</h3>
+  <p>
+    If you request an evaluation licence or contact us, we collect the name,
+    work email address, and organisation you provide, and the correspondence
+    itself. We use it to issue your licence file, to answer you, and to follow
+    up about the evaluation.
+  </p>
+
+  <h3>Customers</h3>
+  <p>
+    For paid licences we hold billing contact details, the licence records we
+    issue, and payment metadata. Card details go to our payment processor and
+    are never held by us.
+  </p>
+
+  <h3>Support diagnostics — off by default</h3>
+  <p>
+    Merkleye can optionally send a small daily operational summary — version,
+    platform, counts, plugin health, error-class counters — to help us diagnose
+    problems for customers on a support plan. It is
+    <strong>disabled by default</strong>, opt-in by explicit configuration, and
+    has a local-only mode that writes the same payload to disk so an
+    air-gapped deployment can attach it to a ticket without any network egress.
+    It never contains domain names, certificates, findings, or configuration.
+    You can print the exact payload before enabling it. The full proposal and
+    the complete never-send list are published in the repository.
+  </p>
+
+  <h2>3. Legal bases</h2>
+  <table>
+    <thead>
+      <tr><th>Data</th><th>Purpose</th><th>Basis (UK/EU GDPR)</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Server logs</td>
+        <td>Serving and securing the site</td>
+        <td>Legitimate interests</td>
+      </tr>
+      <tr>
+        <td>Trial and enquiry details</td>
+        <td>Issuing licences, replying, evaluation follow-up</td>
+        <td>Steps prior to a contract; legitimate interests</td>
+      </tr>
+      <tr>
+        <td>Customer and billing records</td>
+        <td>Performing the licence agreement; tax and accounting</td>
+        <td>Contract; legal obligation</td>
+      </tr>
+      <tr>
+        <td>Support diagnostics</td>
+        <td>Providing contracted support</td>
+        <td>Contract (and opt-in)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>4. Retention</h2>
+  <ul>
+    <li>Server logs: <span class="tbd">[30]</span> days.</li>
+    <li>
+      Trial and enquiry records: <span class="tbd">[24]</span> months from last
+      contact.
+    </li>
+    <li>
+      Customer and billing records: the term plus
+      <span class="tbd">[7]</span> years, as tax law requires.
+    </li>
+    <li>Support diagnostics: 13 months.</li>
+  </ul>
+
+  <h2>5. Sharing</h2>
+  <p>
+    We share personal data only with the subprocessors listed on the
+    <a href="/legal/subprocessors/">Subprocessors</a> page, and where required
+    by law. <strong>We do not sell personal data, and we do not share it for
+    advertising or cross-context behavioural advertising.</strong>
+  </p>
+
+  <h2>6. International transfers</h2>
+  <p>
+    We are established in <span class="tbd">[JURISDICTION]</span>. Where data
+    leaves the UK/EEA it is transferred under the UK IDTA or the EU Standard
+    Contractual Clauses, as set out in the
+    <a href="/legal/dpa/">Data Processing Addendum</a>.
+  </p>
+
+  <h2>7. Your rights</h2>
+  <p>
+    Depending on where you live, you may have the right to access, correct,
+    delete, port, or restrict processing of your personal data, to object to
+    processing based on legitimate interests, and to withdraw consent. Under
+    the CCPA/CPRA you may also request disclosure of the categories collected
+    and opt out of sale or sharing — neither of which we do.
+  </p>
+  <p>
+    Write to <a href="mailto:privacy@merkleye.com">privacy@merkleye.com</a>. We
+    respond within 30 days. If you are in the UK or EEA and unsatisfied, you
+    may complain to your supervisory authority.
+  </p>
+
+  <h2>8. Changes</h2>
+  <p>
+    Material changes are announced on this page with a new effective date, and
+    emailed to customers with an active licence.
+  </p>
+</LegalLayout>

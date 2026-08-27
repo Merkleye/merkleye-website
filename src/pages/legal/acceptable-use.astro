@@ -1,0 +1,92 @@
+---
+import LegalLayout from "../../layouts/LegalLayout.astro";
+---
+
+<LegalLayout
+  title="Acceptable Use Policy"
+  description="The narrow set of things you may not do with Merkleye or with what it finds."
+  updated="[EFFECTIVE DATE]"
+>
+  <p>
+    This policy is part of the <a href="/legal/terms/">Terms of Service</a> and
+    the <a href="/legal/license/">Commercial License Agreement</a>. It is
+    deliberately short. Merkleye reads a public, append-only log; monitoring
+    Certificate Transparency is not something we intend to police.
+  </p>
+
+  <h2>1. What is explicitly fine</h2>
+  <p>
+    So the boundary is clear, none of the following needs permission from us:
+  </p>
+  <ul>
+    <li>
+      Monitoring domains you do not own. CT logs are public by design, and
+      watching a competitor&rsquo;s or a supplier&rsquo;s certificate issuance
+      is ordinary threat intelligence.
+    </li>
+    <li>
+      Generating and monitoring lookalike permutations of any brand, including
+      ones that are not yours.
+    </li>
+    <li>Security research, teaching, and publishing what you find.</li>
+    <li>
+      Running Merkleye for clients as a service provider, subject to a licence
+      that covers those domains.
+    </li>
+  </ul>
+
+  <h2>2. What you may not do</h2>
+  <ul>
+    <li>
+      <strong>Use Merkleye or its output to attack.</strong> Findings must not
+      be used to select targets for unauthorised access, to register the
+      lookalike domains it surfaces for your own phishing, or to facilitate
+      fraud.
+    </li>
+    <li>
+      <strong>Target individuals.</strong> Do not use Merkleye to monitor,
+      profile, stalk, or harass a natural person, or to build a surveillance
+      product aimed at private individuals.
+    </li>
+    <li>
+      <strong>Suppress lawful speech.</strong> Do not use findings to support
+      takedown or abuse complaints you know to be unfounded, against criticism,
+      parody, or legitimate research.
+    </li>
+    <li>
+      <strong>Abuse third-party infrastructure.</strong> Do not configure
+      Merkleye to place unreasonable load on CT log operators, DNS resolvers,
+      or any API, or to evade their rate limits or terms.
+    </li>
+    <li>
+      <strong>Evade licensing.</strong> Do not chain evaluation licences,
+      misreport domain counts, or split one deployment across entities to stay
+      under a cap. See the <a href="/legal/license/">licence</a>.
+    </li>
+    <li>
+      <strong>Break the law.</strong> Including export controls and sanctions.
+      We do not knowingly license to parties on a restricted-party list or in a
+      comprehensively sanctioned jurisdiction.
+    </li>
+    <li>
+      <strong>Misuse this website.</strong> No attempts to gain unauthorised
+      access, no denial-of-service, no scraping that degrades it.
+    </li>
+  </ul>
+
+  <h2>3. Consequences</h2>
+  <p>
+    For the AGPL-licensed software, we have no technical means of enforcement
+    and do not want any — there is no remote kill switch and no phone-home. Our
+    remedies are contractual: we may suspend or terminate a commercial licence,
+    decline to renew, refuse support, and where the conduct is serious, report
+    it.
+  </p>
+
+  <h2>4. Reporting</h2>
+  <p>
+    Report abuse to <a href="mailto:abuse@merkleye.com">abuse@merkleye.com</a>.
+    For vulnerabilities in Merkleye itself, use the
+    <a href="/legal/security/">disclosure process</a> instead.
+  </p>
+</LegalLayout>

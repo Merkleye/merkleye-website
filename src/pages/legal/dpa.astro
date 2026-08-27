@@ -1,0 +1,157 @@
+---
+import LegalLayout from "../../layouts/LegalLayout.astro";
+---
+
+<LegalLayout
+  title="Data Processing Addendum"
+  description="GDPR roles and obligations for Merkleye. In most deployments we are not a processor of your monitoring data at all."
+  updated="[EFFECTIVE DATE]"
+>
+  <p>
+    This addendum forms part of the
+    <a href="/legal/license/">Commercial License Agreement</a> between
+    <span class="tbd">[ENTITY LEGAL NAME]</span> and Customer, and applies where
+    we process personal data on Customer&rsquo;s behalf.
+  </p>
+
+  <h2>1. Scope — start here</h2>
+  <p>
+    Merkleye is deployed on Customer&rsquo;s own infrastructure. Certificate
+    data, monitored domains, findings, and notifications are processed entirely
+    within Customer&rsquo;s environment and are never transmitted to us.
+    <strong>In respect of that data we are not a processor, not a controller,
+    and not a recipient.</strong> There is no transfer to address, no
+    subprocessor chain, and no deletion obligation, because we never hold it.
+  </p>
+  <p>This addendum therefore covers only two narrow categories:</p>
+  <table>
+    <thead>
+      <tr><th>Category</th><th>Our role</th><th>Data</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Account and billing records</td>
+        <td>Controller</td>
+        <td>Contact name, work email, organisation, billing details, licence records</td>
+      </tr>
+      <tr>
+        <td>Support diagnostics, if enabled</td>
+        <td>Processor</td>
+        <td>Installation identifier, licence identifier, version, platform, operational counters</td>
+      </tr>
+      <tr>
+        <td>Support correspondence</td>
+        <td>Processor</td>
+        <td>Whatever Customer chooses to send us in a ticket</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>2. Roles and instructions</h2>
+  <p>
+    Where we act as processor, Customer is the controller. We process personal
+    data only on Customer&rsquo;s documented instructions, which this addendum
+    and the agreement constitute, and we will tell Customer if an instruction
+    appears to breach applicable data protection law.
+  </p>
+
+  <h2>3. Subject matter and duration</h2>
+  <p>
+    Subject matter: providing contracted support. Duration: the term, plus the
+    retention periods in the <a href="/legal/privacy/">Privacy Policy</a>.
+    Categories of data subject: Customer&rsquo;s personnel who administer the
+    deployment or contact support.
+  </p>
+
+  <h2>4. Support diagnostics specifically</h2>
+  <p>
+    Diagnostics are <strong>disabled by default</strong> and require an explicit
+    configuration change by Customer. A local-only mode writes the payload to
+    Customer&rsquo;s own disk and transmits nothing, which is the recommended
+    setting for air-gapped and high-assurance deployments.
+  </p>
+  <p>
+    The payload contains counts, versions, booleans, and enumerated error
+    classes. It <strong>never</strong> contains domain names in any form
+    including hashed, certificates, subject alternative names, findings,
+    scores, configuration contents, credentials, or free-text error messages.
+    Customer can print the exact payload before enabling transmission. We
+    retain it for 13 months.
+  </p>
+
+  <h2>5. Confidentiality and security</h2>
+  <p>
+    Personnel with access are bound by confidentiality obligations. We maintain
+    technical and organisational measures appropriate to the risk, including:
+    encryption in transit and at rest; least-privilege access with multi-factor
+    authentication enforced by hardware keys; separated production and
+    development environments; logging and monitoring of administrative access;
+    documented change management; and periodic review.
+  </p>
+  <p>
+    The most significant measure is architectural: we do not receive
+    Customer&rsquo;s monitoring data, so it cannot be exposed by a compromise of
+    our systems.
+  </p>
+
+  <h2>6. Subprocessors</h2>
+  <p>
+    Customer authorises the subprocessors listed at
+    <a href="/legal/subprocessors/">/legal/subprocessors</a>. We will give at
+    least <span class="tbd">[30]</span> days&rsquo; notice before adding or
+    replacing one; Customer may object on reasonable data-protection grounds,
+    and if we cannot resolve the objection Customer may terminate the affected
+    service without penalty. We remain liable for our subprocessors&rsquo; acts.
+  </p>
+
+  <h2>7. International transfers</h2>
+  <p>
+    Where personal data is transferred out of the UK or EEA, the transfer is
+    made under the EU Standard Contractual Clauses (Module Two, controller to
+    processor) or the UK International Data Transfer Addendum, which are
+    incorporated by reference. Docking clause: optional. Governing law and
+    forum follow Clause 17 and 18 as
+    <span class="tbd">[MEMBER STATE]</span>.
+  </p>
+
+  <h2>8. Data subject requests</h2>
+  <p>
+    Taking into account the nature of the processing, we will assist Customer
+    in responding to data subject requests. Given the narrow data we hold, that
+    assistance is normally a lookup and an export. If a data subject contacts
+    us directly about data we process for Customer, we will refer them to
+    Customer rather than respond substantively.
+  </p>
+
+  <h2>9. Personal data breach</h2>
+  <p>
+    We will notify Customer without undue delay and in any event within
+    <span class="tbd">[48]</span> hours of becoming aware of a personal data
+    breach affecting Customer&rsquo;s personal data, with the nature of the
+    breach, likely consequences, and measures taken. Notice is not an admission
+    of fault.
+  </p>
+
+  <h2>10. Deletion and return</h2>
+  <p>
+    On termination we delete or return personal data processed on
+    Customer&rsquo;s behalf within <span class="tbd">[90]</span> days, except
+    where retention is required by law. Backups age out on their normal cycle.
+  </p>
+
+  <h2>11. Audit</h2>
+  <p>
+    We will make available the information reasonably necessary to demonstrate
+    compliance, and respond to a security questionnaire once a year. Given that
+    we hold no monitoring data, on-site audit is not offered; where a
+    Customer&rsquo;s regulator requires one, the parties will agree a
+    proportionate alternative in writing.
+  </p>
+
+  <h2>12. Order of precedence</h2>
+  <p>
+    In case of conflict: the Standard Contractual Clauses, then this addendum,
+    then the <a href="/legal/license/">Commercial License Agreement</a>, then
+    the <a href="/legal/terms/">Terms of Service</a>.
+  </p>
+</LegalLayout>

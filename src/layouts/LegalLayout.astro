@@ -1,0 +1,177 @@
+---
+import Layout from "./Layout.astro";
+import LegalNav from "../components/LegalNav.astro";
+import Footer from "../components/Footer.astro";
+import DraftNotice from "../components/DraftNotice.astro";
+
+interface Props {
+  title: string;
+  description: string;
+  updated: string;
+  /** Set false once counsel has signed this page off. */
+  draft?: boolean;
+}
+
+const { title, description, updated, draft = true } = Astro.props;
+---
+
+<Layout title={`${title} — Merkleye`} description={description}>
+  <LegalNav />
+  <main class="mx-auto max-w-3xl px-6 pt-14 pb-24">
+    <p class="font-mono text-xs tracking-widest text-(--color-accent-dim) uppercase">
+      Legal
+    </p>
+    <h1
+      class="mt-3 text-3xl font-semibold tracking-tight text-balance text-(--color-ink) sm:text-4xl"
+    >
+      {title}
+    </h1>
+    <p class="mt-4 font-mono text-xs text-(--color-ink-faint)">
+      Last updated {updated}
+    </p>
+
+    {draft && <DraftNotice />}
+
+    <div class="legal-prose mt-10">
+      <slot />
+    </div>
+
+    <p
+      class="mt-16 border-t border-(--color-border-soft) pt-6 text-sm text-(--color-ink-faint)"
+    >
+      Questions about this page? <a
+        href="mailto:legal@merkleye.com"
+        class="text-(--color-accent-dim) hover:underline">legal@merkleye.com</a
+      >. Index of all policies: <a
+        href="/legal/"
+        class="text-(--color-accent-dim) hover:underline">/legal</a
+      >.
+    </p>
+  </main>
+  <Footer />
+</Layout>
+
+<style is:global>
+  .legal-prose {
+    color: var(--color-ink-muted);
+    font-size: 0.975rem;
+    line-height: 1.72;
+  }
+
+  .legal-prose > * + * {
+    margin-top: 1.15em;
+  }
+
+  .legal-prose h2 {
+    color: var(--color-ink);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 1.02rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin-top: 2.6em;
+    padding-top: 1.3em;
+    border-top: 1px solid var(--color-border-soft);
+    text-wrap: balance;
+  }
+
+  .legal-prose h2:first-child {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+  }
+
+  .legal-prose h3 {
+    color: var(--color-ink);
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-top: 1.9em;
+  }
+
+  .legal-prose strong {
+    color: var(--color-ink);
+    font-weight: 600;
+  }
+
+  .legal-prose a {
+    color: var(--color-accent-dim);
+    text-underline-offset: 2px;
+  }
+
+  .legal-prose a:hover {
+    text-decoration: underline;
+  }
+
+  .legal-prose ul,
+  .legal-prose ol {
+    padding-left: 1.4em;
+  }
+
+  .legal-prose ul {
+    list-style: disc;
+  }
+
+  .legal-prose ol {
+    list-style: decimal;
+  }
+
+  .legal-prose li + li {
+    margin-top: 0.5em;
+  }
+
+  .legal-prose li::marker {
+    color: var(--color-ink-faint);
+  }
+
+  .legal-prose code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.86em;
+    color: var(--color-ink);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-soft);
+    border-radius: 3px;
+    padding: 0.08em 0.34em;
+  }
+
+  /* Placeholders that must be replaced before these pages are relied on. */
+  .legal-prose .tbd {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.84em;
+    color: var(--color-warn);
+    border: 1px dashed var(--color-warn);
+    border-radius: 3px;
+    padding: 0.05em 0.4em;
+    white-space: nowrap;
+  }
+
+  .legal-prose table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    display: block;
+    overflow-x: auto;
+  }
+
+  .legal-prose th {
+    text-align: left;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
+    border-bottom: 1px solid var(--color-border);
+    padding: 0.6em 1em 0.6em 0;
+    white-space: nowrap;
+  }
+
+  .legal-prose td {
+    border-bottom: 1px solid var(--color-border-soft);
+    padding: 0.7em 1em 0.7em 0;
+    vertical-align: top;
+  }
+
+  .legal-prose blockquote {
+    border-left: 2px solid var(--color-accent-dim);
+    padding-left: 1.1em;
+    color: var(--color-ink);
+  }
+</style>

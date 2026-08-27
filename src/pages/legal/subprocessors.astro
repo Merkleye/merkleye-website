@@ -1,0 +1,118 @@
+---
+import LegalLayout from "../../layouts/LegalLayout.astro";
+
+const subprocessors = [
+  {
+    name: "[Cloudflare, Inc.]",
+    purpose: "Website hosting, CDN, and DNS",
+    data: "Server logs — IP address, user agent, path, timestamp",
+    location: "[Global edge; US entity]",
+  },
+  {
+    name: "[Email provider]",
+    purpose: "Transactional email — licence file delivery, renewal notices",
+    data: "Name, work email address, organisation",
+    location: "[TBD]",
+  },
+  {
+    name: "[Stripe, Inc.]",
+    purpose: "Payment processing and invoicing",
+    data: "Billing contact, payment metadata. Card details go to the processor and never to us.",
+    location: "[US / Ireland]",
+  },
+  {
+    name: "[Support desk / CRM]",
+    purpose: "Support tickets and sales correspondence",
+    data: "Correspondence and contact details",
+    location: "[TBD]",
+  },
+  {
+    name: "[Diagnostics store]",
+    purpose: "Storing opt-in support diagnostics",
+    data: "Installation identifier, licence identifier, version, operational counters. Never domains, certificates, or findings.",
+    location: "[TBD]",
+  },
+];
+---
+
+<LegalLayout
+  title="Subprocessors"
+  description="Every third party that touches data Merkleye holds, and what each of them is used for."
+  updated="[EFFECTIVE DATE]"
+>
+  <p>
+    This page lists every third party that processes personal data on our
+    behalf. It is referenced by the
+    <a href="/legal/dpa/">Data Processing Addendum</a>, and we give at least
+    <span class="tbd">[30]</span> days&rsquo; notice before adding or replacing
+    an entry.
+  </p>
+
+  <blockquote>
+    <p>
+      None of these subprocessors receives your monitored domains,
+      certificates, or findings. Merkleye is self-hosted, so that data never
+      leaves your infrastructure and there is no chain for it to travel down.
+    </p>
+  </blockquote>
+
+  <h2>Current subprocessors</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Subprocessor</th>
+        <th>Purpose</th>
+        <th>Data</th>
+        <th>Location</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        subprocessors.map((s) => (
+          <tr>
+            <td>
+              <span class="tbd">{s.name}</span>
+            </td>
+            <td>{s.purpose}</td>
+            <td>{s.data}</td>
+            <td>
+              <span class="tbd">{s.location}</span>
+            </td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+
+  <h2>Not subprocessors</h2>
+  <p>
+    Two components ship inside Merkleye&rsquo;s container images and are
+    sometimes mistaken for subprocessors on a questionnaire. They are not: both
+    run entirely inside your own deployment, under your control, and send us
+    nothing.
+  </p>
+  <ul>
+    <li>
+      <strong>certspotter</strong> (SSLMate, MPL-2.0) — tails public
+      Certificate Transparency logs from your infrastructure.
+    </li>
+    <li>
+      <strong>dnstwist</strong> (Apache-2.0) — generates lookalike domain
+      permutations locally.
+    </li>
+  </ul>
+  <p>
+    Your deployment does make outbound requests to public CT log operators and,
+    optionally, to SSLMate&rsquo;s API if you enable the backfill plugin. Those
+    are your deployment&rsquo;s relationships, not ours, and are documented in
+    the operations guide.
+  </p>
+
+  <h2>Change notifications</h2>
+  <p>
+    To be notified when this page changes, email
+    <a href="mailto:legal@merkleye.com">legal@merkleye.com</a> and ask to be
+    added to the subprocessor notice list.
+  </p>
+</LegalLayout>
