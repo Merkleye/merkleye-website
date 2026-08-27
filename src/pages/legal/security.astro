@@ -1,0 +1,132 @@
+---
+import LegalLayout from "../../layouts/LegalLayout.astro";
+---
+
+<LegalLayout
+  title="Security & Vulnerability Disclosure"
+  description="How to report a vulnerability in Merkleye, our safe-harbour commitment, and our response targets."
+  updated="[EFFECTIVE DATE]"
+>
+  <p>
+    Merkleye is a security tool, so a vulnerability in it is worse than a
+    vulnerability in most software. We would much rather hear from you than
+    not.
+  </p>
+
+  <h2>1. How to report</h2>
+  <p>
+    Email <a href="mailto:security@merkleye.com">security@merkleye.com</a>,
+    encrypted to <span class="tbd">[PGP KEY FINGERPRINT]</span> if you prefer
+    (<span class="tbd">[/pgp.asc]</span>). Please include what you found, how
+    to reproduce it, the version or commit, and what you think an attacker
+    could achieve.
+  </p>
+  <p>
+    <strong>Do not open a public GitHub issue for a suspected vulnerability.</strong>
+    Private advisories on the repository are also fine if you prefer that route.
+  </p>
+
+  <h2>2. What to expect</h2>
+  <table>
+    <thead>
+      <tr><th>Stage</th><th>Target</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Acknowledgement</td><td>2 business days</td></tr>
+      <tr><td>Initial assessment and severity</td><td>5 business days</td></tr>
+      <tr><td>Fix or documented mitigation, critical and high</td><td>30 days</td></tr>
+      <tr><td>Fix, medium and low</td><td>Next scheduled release</td></tr>
+      <tr><td>Public advisory</td><td>Within 90 days, or sooner once a fix ships</td></tr>
+    </tbody>
+  </table>
+  <p>
+    We publish advisories as GitHub Security Advisories with a CVE where one
+    applies, and we credit reporters by name unless you ask us not to.
+  </p>
+
+  <h2>3. Safe harbour</h2>
+  <p>
+    If you make a good-faith effort to comply with this policy, we will not
+    pursue or support legal action against you for your research, and we will
+    say so publicly if a third party does. We consider your research authorised
+    under applicable anti-hacking law, and we will work with you if a
+    good-faith mistake happens.
+  </p>
+  <p>To stay in scope, please:</p>
+  <ul>
+    <li>
+      Test only against your own deployment. Do not attack other people&rsquo;s
+      Merkleye instances, and do not attack this website beyond what is needed
+      to demonstrate a finding.
+    </li>
+    <li>
+      Do not access, modify, or exfiltrate data that is not yours. If you
+      encounter someone else&rsquo;s data, stop and tell us.
+    </li>
+    <li>Avoid degradation of service, and never run a denial-of-service test.</li>
+    <li>
+      Give us a reasonable window to fix before publishing, and coordinate the
+      date with us.
+    </li>
+    <li>Do not use social engineering, physical intrusion, or spam.</li>
+  </ul>
+
+  <h2>4. Scope</h2>
+  <p><strong>In scope:</strong></p>
+  <ul>
+    <li>The Merkleye server, its API, and the sidecars we distribute.</li>
+    <li>The dashboard UI.</li>
+    <li>Our container images, release artefacts, and build pipeline.</li>
+    <li>This website.</li>
+  </ul>
+  <p><strong>Out of scope:</strong></p>
+  <ul>
+    <li>
+      Vulnerabilities in upstream projects — report those upstream. Tell us
+      too if Merkleye is affected, and we will ship the update.
+    </li>
+    <li>
+      Findings that require a modified Merkleye build, or an operator
+      configuration the documentation warns against.
+    </li>
+    <li>
+      Missing hardening headers or best-practice notes on the static website
+      with no demonstrated impact, TLS configuration scanner output, and
+      automated scanner reports with no proof of exploitability.
+    </li>
+    <li>
+      The absence of a remote licence check. Merkleye is AGPL software with no
+      phone-home; bypassing the licence gate is not a vulnerability.
+    </li>
+    <li>Social engineering of our staff or users.</li>
+  </ul>
+
+  <h2>5. No bug bounty yet</h2>
+  <p>
+    We do not currently pay for reports. We are a small team and would rather
+    say so than run a programme we cannot fund properly. We do credit
+    reporters, and we will send swag once there is swag to send.
+  </p>
+
+  <h2>6. Our own posture</h2>
+  <p>
+    Because we ship a security tool, a compromise of our release pipeline is
+    the worst outcome available to us. We therefore: publish an SPDX SBOM for
+    every image and platform with each release,
+    <span class="tbd">[sign images with cosign and publish provenance]</span>,
+    require hardware-key multi-factor authentication across the organisation,
+    protect release branches, and keep the set of secrets available to CI as
+    small as we can.
+  </p>
+  <p>
+    A structural note worth stating: we hold none of your monitoring data. A
+    total compromise of our infrastructure would not expose your domains,
+    certificates, or findings, because they never reach us.
+  </p>
+
+  <h2>7. Machine-readable contact</h2>
+  <p>
+    Per RFC 9116, see
+    <a href="/.well-known/security.txt">/.well-known/security.txt</a>.
+  </p>
+</LegalLayout>

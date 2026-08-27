@@ -1,0 +1,223 @@
+---
+import LegalLayout from "../../layouts/LegalLayout.astro";
+---
+
+<LegalLayout
+  title="Commercial License Agreement"
+  description="The paid Merkleye licence: what counts as a domain for metering, term and renewal, trials, support, and the AGPL exception."
+  updated="[EFFECTIVE DATE]"
+>
+  <p>
+    This agreement is between <span class="tbd">[ENTITY LEGAL NAME]</span>
+    (&ldquo;Merkleye&rdquo;) and the organisation named on the order form
+    (&ldquo;Customer&rdquo;). It applies to any deployment covered by a paid
+    licence file. Where it conflicts with the
+    <a href="/legal/terms/">Terms of Service</a>, this agreement governs.
+  </p>
+
+  <h2>1. What you are buying</h2>
+  <p>
+    The Merkleye software itself is licensed under AGPL-3.0 and remains so. A
+    commercial licence buys three separate things:
+  </p>
+  <ol>
+    <li>
+      <strong>Entitlement.</strong> The right to monitor more than one
+      registrable domain and to enable the features designated commercial in
+      the documentation.
+    </li>
+    <li>
+      <strong>Support and assurance</strong> at the level on the order form —
+      response targets, signed and attested release artefacts, security
+      advisories, and a named contact at the higher tiers.
+    </li>
+    <li>
+      <strong>Optionally, an AGPL exception.</strong> Where the order form says
+      so, Customer receives the same software under the alternative proprietary
+      terms in section 8, instead of the AGPL.
+    </li>
+  </ol>
+
+  <h2>2. Metering — what a domain is</h2>
+  <p>
+    The licence file carries a maximum number of domains. That number counts
+    <strong>registrable domains explicitly configured for monitoring</strong> —
+    each unique effective top-level domain plus one label, as determined by the
+    Public Suffix List. <code>example.com</code> and <code>example.co.uk</code>
+    are two domains.
+  </p>
+  <p>The following <strong>never</strong> count against the limit:</p>
+  <ul>
+    <li>
+      <strong>Generated lookalike permutations.</strong> A monitored domain
+      with five thousand dnstwist variants counts as one. Permutations are
+      unlimited at every tier, including the free edition.
+    </li>
+    <li>
+      Subdomains and subject alternative names discovered under a monitored
+      domain. Observing <code>vpn.example.com</code> consumes no additional
+      entitlement.
+    </li>
+    <li>
+      Certificates, observations, matches, or findings of any volume.
+    </li>
+    <li>Users, seats, API tokens, or notification channels.</li>
+  </ul>
+  <p>
+    Exceeding the limit does not disable monitoring of domains already
+    configured. Merkleye warns, continues watching everything already
+    configured, and refuses to add new domains until the entitlement is
+    increased. Contact us and we will issue an updated licence file, prorated
+    to your existing term.
+  </p>
+
+  <h2>3. Term, renewal, and fees</h2>
+  <p>
+    The initial term is stated on the order form, is normally twelve months,
+    and is billed annually in advance. Fees are exclusive of tax. Invoices are
+    due within <span class="tbd">[30]</span> days.
+  </p>
+  <p>
+    Terms renew only if both parties agree; <strong>this agreement does not
+    auto-renew</strong>. Because licensing is offline, we will contact you
+    before expiry. Renewal pricing will not increase by more than
+    <span class="tbd">[7%]</span> over the prior term unless your entitlement
+    changes.
+  </p>
+
+  <h2>4. Evaluation licences</h2>
+  <p>
+    Evaluation licences are granted for 30 days, permit up to 250 domains,
+    enable every feature, and carry no support commitment, no warranty, and no
+    indemnity. They are for genuine evaluation, one per organisation, and may
+    not be chained to avoid paying for production use. At expiry the deployment
+    degrades to the free edition&rsquo;s limits and continues operating.
+  </p>
+
+  <h2>5. Support</h2>
+  <p>
+    We will use commercially reasonable efforts to meet the response targets on
+    the order form. Targets are for
+    <strong>first meaningful response, not resolution</strong>. Support covers
+    the current release and the previous minor release, in an unmodified
+    deployment.
+  </p>
+  <p>Out of scope: bugs that only appear in a modified build, third-party
+    software we do not distribute, your infrastructure, and general security
+    consulting.
+  </p>
+
+  <h2>6. Restrictions</h2>
+  <p>Customer may not:</p>
+  <ul>
+    <li>
+      share, resell, or sublicense a licence file, or use one across legal
+      entities not named on the order form, except under a signed OEM or MSSP
+      agreement;
+    </li>
+    <li>
+      misrepresent the number of monitored domains in order to reduce fees;
+    </li>
+    <li>use the Merkleye name or marks except as the
+      <a href="/legal/trademark/">Trademark Policy</a> permits.
+    </li>
+  </ul>
+  <p>
+    Nothing in this section restricts any right granted by the AGPL to
+    Customer&rsquo;s own copy of the software.
+  </p>
+
+  <h2>7. Verification</h2>
+  <p>
+    Merkleye performs no remote licence checks and collects no usage data by
+    default, so verification is by self-certification: on written request, no
+    more than once a year, Customer will confirm the number of registrable
+    domains configured. There is no audit right, no inspection right, and no
+    telemetry requirement.
+  </p>
+
+  <h2>8. AGPL exception (where purchased)</h2>
+  <p>
+    Where the order form includes it, Merkleye grants Customer a
+    non-exclusive, non-transferable licence to use, modify, and internally
+    distribute the software under proprietary terms in place of AGPL-3.0, for
+    the term. Under this exception Customer has no obligation to disclose
+    modifications to any party. The exception does not permit redistribution to
+    third parties or offering the software as a service, which require a
+    separate OEM agreement.
+  </p>
+
+  <h2>9. Warranties</h2>
+  <p>
+    We warrant that the software will perform materially as documented for
+    <span class="tbd">[90]</span> days, and that we have the right to grant
+    this licence. Your exclusive remedy for breach is repair, replacement, or a
+    prorated refund.
+  </p>
+  <p>
+    <strong>We do not warrant that Merkleye will detect any particular
+    certificate, lookalike domain, or attack.</strong> Certificate Transparency
+    covers publicly-trusted certificate authorities only; certificates from an
+    internal PKI, self-signed certificates, and anything issued outside the
+    browser root programmes will never appear. Detection also depends on
+    third-party log operators we do not control. Except as stated here, the
+    software is provided as is.
+  </p>
+
+  <h2>10. Indemnity</h2>
+  <p>
+    We will defend Customer against a third-party claim that unmodified
+    Merkleye infringes that party&rsquo;s intellectual property, and pay damages
+    finally awarded, provided Customer notifies us promptly and lets us control
+    the defence. This does not apply to modified builds, combinations with
+    other software, or use in breach of this agreement.
+  </p>
+
+  <h2>11. Limitation of liability</h2>
+  <p>
+    Neither party is liable for indirect, incidental, special, consequential,
+    or punitive damages, or for lost profits or lost data.
+  </p>
+  <p>
+    Each party&rsquo;s total aggregate liability is capped at the fees paid or
+    payable in the <span class="tbd">[12]</span> months before the claim.
+    Excluded from the cap: Customer&rsquo;s payment obligations, either
+    party&rsquo;s breach of confidentiality, our indemnity in section 10, and
+    liability that cannot lawfully be limited.
+  </p>
+
+  <h2>12. Confidentiality</h2>
+  <p>
+    Each party will protect the other&rsquo;s non-public information with at
+    least reasonable care and use it only to perform this agreement. The
+    obligation survives three years past termination.
+  </p>
+
+  <h2>13. Data protection</h2>
+  <p>
+    Merkleye is self-hosted, so in the ordinary case we process none of
+    Customer&rsquo;s monitoring data and are not a processor of it. Where we do
+    process personal data — account records, and support diagnostics if
+    Customer enables them — the <a href="/legal/dpa/">Data Processing
+    Addendum</a> applies and is incorporated here.
+  </p>
+
+  <h2>14. Termination</h2>
+  <p>
+    Either party may terminate for material breach not cured within
+    <span class="tbd">[30]</span> days of written notice. On termination
+    Customer&rsquo;s entitlement ends; because the software is AGPL-licensed,
+    Customer&rsquo;s rights in the code itself continue under that licence, and
+    the deployment continues to operate at the free edition&rsquo;s limits.
+    Fees already paid are non-refundable except where section 9 applies.
+  </p>
+
+  <h2>15. General</h2>
+  <p>
+    Governing law and venue are as stated in the
+    <a href="/legal/terms/">Terms of Service</a>. Neither party may assign
+    without consent, except to a successor of substantially all its business.
+    This agreement, the order form, and the documents it incorporates are the
+    entire agreement; Customer&rsquo;s purchase-order terms have no effect.
+  </p>
+</LegalLayout>

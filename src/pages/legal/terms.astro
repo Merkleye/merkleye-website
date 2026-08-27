@@ -1,0 +1,142 @@
+---
+import LegalLayout from "../../layouts/LegalLayout.astro";
+---
+
+<LegalLayout
+  title="Terms of Service"
+  description="The terms for using merkleye.com and for downloading and running the freely-licensed editions of Merkleye."
+  updated="[EFFECTIVE DATE]"
+>
+  <p>
+    These terms are between you and <span class="tbd">[ENTITY LEGAL NAME]</span>
+    (&ldquo;Merkleye&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;), a
+    <span class="tbd">[ENTITY TYPE]</span> registered in
+    <span class="tbd">[JURISDICTION]</span>. They cover this website and the
+    freely-licensed editions of the Merkleye software. Paid deployments are
+    governed by the <a href="/legal/license/">Commercial License Agreement</a>,
+    which takes precedence where the two differ.
+  </p>
+
+  <h2>1. The software and the website are different things</h2>
+  <p>
+    The <strong>website</strong> is what you are reading. These terms govern
+    your use of it.
+  </p>
+  <p>
+    The <strong>software</strong> is licensed to you under the GNU Affero
+    General Public License, version 3 (AGPL-3.0), and your rights in it come
+    from that licence, not from this page. Nothing here reduces the freedoms
+    the AGPL grants you. Where this page and the AGPL conflict as to the
+    software, the AGPL governs.
+  </p>
+  <p>
+    Merkleye runs entirely on infrastructure you control. We do not operate it
+    for you, we do not receive the certificates it observes, and we have no
+    access to your deployment.
+  </p>
+
+  <h2>2. Free edition and licence limits</h2>
+  <p>
+    The freely-licensed edition monitors one registrable domain. Additional
+    domains, and the features marked as commercial in the documentation,
+    require a paid licence.
+  </p>
+  <p>
+    A licence file is an entitlement, not a technical restraint on your rights
+    under the AGPL. If your licence lapses, Merkleye continues to ingest
+    Certificate Transparency logs, match, score, and notify — we consider a
+    monitoring tool that stops monitoring to be a defect, not an enforcement
+    mechanism. Commercial features stop; the watchtower does not.
+  </p>
+
+  <h2>3. Trials</h2>
+  <p>
+    We may issue a 30-day evaluation licence. Trials are for genuine
+    evaluation, one per organisation, and are not to be chained or reissued to
+    avoid paying for production use. At expiry a trial licence degrades to the
+    free edition&rsquo;s limits.
+  </p>
+
+  <h2>4. Acceptable use</h2>
+  <p>
+    Your use of the software and this website is subject to the
+    <a href="/legal/acceptable-use/">Acceptable Use Policy</a>, which is
+    incorporated into these terms.
+  </p>
+
+  <h2>5. Intellectual property and trademarks</h2>
+  <p>
+    The AGPL grants you rights in the code. It grants no rights in our name,
+    logo, or brand. See the <a href="/legal/trademark/">Trademark Policy</a>
+    for what you may and may not call a modified version.
+  </p>
+
+  <h2>6. Third-party components</h2>
+  <p>
+    Merkleye is distributed with, and depends on, software licensed by others —
+    including SSLMate&rsquo;s certspotter (MPL-2.0) and dnstwist (Apache-2.0),
+    each of which runs as a separate process in its own container. Those
+    components remain governed by their own licences, whose texts ship with the
+    container images and are enumerated in the SBOM attached to every release.
+  </p>
+
+  <h2>7. No warranty</h2>
+  <p>
+    The software is provided <strong>as is</strong>, without warranty of any
+    kind, express or implied, including merchantability, fitness for a
+    particular purpose, and non-infringement. This restates the AGPL&rsquo;s own
+    disclaimer and does not narrow it.
+  </p>
+  <p>
+    In particular, and stated plainly because it is the misunderstanding that
+    matters most: Certificate Transparency covers publicly-trusted certificate
+    authorities only. Merkleye cannot see certificates from an internal PKI,
+    self-signed certificates, or anything issued outside the browser root
+    programmes. It is an inventory of your publicly-trusted certificates, not
+    of all your certificates. <strong>It is not a guarantee that you will
+    detect any particular certificate, phishing site, or attack.</strong>
+  </p>
+
+  <h2>8. Limitation of liability</h2>
+  <p>
+    To the maximum extent permitted by law, we are not liable for indirect,
+    incidental, special, consequential, or punitive damages, nor for lost
+    profits, lost data, or business interruption, arising out of your use of
+    the software or this website.
+  </p>
+  <p>
+    Our total aggregate liability for the free edition and the website is
+    limited to <span class="tbd">[USD 100]</span>. Liability under a paid
+    licence is addressed in the
+    <a href="/legal/license/">Commercial License Agreement</a>.
+  </p>
+  <p>
+    Some jurisdictions do not allow these exclusions. Where that is so, they
+    apply to the fullest extent permitted, and nothing here excludes liability
+    for fraud, wilful misconduct, or death or personal injury caused by
+    negligence.
+  </p>
+
+  <h2>9. Changes</h2>
+  <p>
+    We may update these terms. Material changes will be announced on this page
+    with a new effective date, and — for customers with an active licence — by
+    email at least <span class="tbd">[30]</span> days before they take effect.
+    Changes never apply retroactively to a licence term already paid for.
+  </p>
+
+  <h2>10. Governing law</h2>
+  <p>
+    These terms are governed by the laws of
+    <span class="tbd">[STATE / COUNTRY]</span>, without regard to conflict of
+    law rules, and the courts of <span class="tbd">[VENUE]</span> have
+    exclusive jurisdiction.
+  </p>
+
+  <h2>11. Contact</h2>
+  <p>
+    <span class="tbd">[ENTITY LEGAL NAME]</span>,
+    <span class="tbd">[REGISTERED ADDRESS]</span> &middot;
+    <a href="mailto:legal@merkleye.com">legal@merkleye.com</a>
+  </p>
+</LegalLayout>
