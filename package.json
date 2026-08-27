@@ -11,7 +11,7 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@merkleye/design-tokens": "^1.0.1",
+    "@merkleye/design-tokens": "^1.1.0",
     "astro": "^7.2.4"
   },
   "devDependencies": {

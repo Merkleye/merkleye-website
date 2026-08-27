@@ -1,0 +1,24 @@
+<svg viewBox="0 0 680 200" xmlns="http://www.w3.org/2000/svg">
+  <g transform="translate(0,0)">
+    <path d="M28,100 Q100,44 172,100 Q100,156 28,100 Z"
+          fill="none" stroke="#0f9c8c" stroke-width="7" stroke-linejoin="round"/>
+
+    <g stroke="#55666e" stroke-width="2.6" fill="none">
+      <line x1="81.6" y1="114.2" x2="90.8" y2="98.1"/>
+      <line x1="100" y1="114.2" x2="90.8" y2="98.1"/>
+      <line x1="90.8" y1="98.1" x2="104.6" y2="82"/>
+      <line x1="118.4" y1="114.2" x2="104.6" y2="82"/>
+    </g>
+
+    <circle cx="104.6" cy="82" r="4.6" fill="#0f9c8c"/>
+    <circle cx="90.8" cy="98.1" r="3.7" fill="#0a7568"/>
+    <circle cx="81.6" cy="114.2" r="3.7" fill="#3f4f57"/>
+    <circle cx="100" cy="114.2" r="3.7" fill="#3f4f57"/>
+    <circle cx="118.4" cy="114.2" r="3.7" fill="#3f4f57"/>
+  </g>
+
+  <text x="210" y="126"
+        font-family="'Space Grotesk','Inter',Arial,sans-serif"
+        font-size="72" font-weight="600" letter-spacing="-1"
+        fill="#0b1116">merkl<tspan fill="#0a7568">e</tspan>ye</text>
+</svg>
