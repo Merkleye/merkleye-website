@@ -55,3 +55,37 @@
 :root[data-theme="dark"] .theme-toggle .icon-moon {
   display: block;
 }
+
+/* Brand logotype — same precedence as above: the dark- and light-transparent
+   logotype assets have their own baked-in colors (not currentColor), so we
+   swap the whole SVG per theme rather than reparametrizing individual
+   fills. */
+.brand-logo-dark {
+  display: block;
+}
+.brand-logo-light {
+  display: none;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) .brand-logo-dark {
+    display: none;
+  }
+  :root:not([data-theme="dark"]) .brand-logo-light {
+    display: block;
+  }
+}
+
+:root[data-theme="light"] .brand-logo-dark {
+  display: none;
+}
+:root[data-theme="light"] .brand-logo-light {
+  display: block;
+}
+
+:root[data-theme="dark"] .brand-logo-dark {
+  display: block;
+}
+:root[data-theme="dark"] .brand-logo-light {
+  display: none;
+}
