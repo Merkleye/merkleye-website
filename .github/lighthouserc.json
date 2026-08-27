@@ -3,8 +3,10 @@
     "collect": {
       "staticDistDir": "./dist",
       "numberOfRuns": 3,
-      "settings": {
-        "chromeFlags": "--disable-gpu --no-sandbox --no-zygote"
+      "puppeteerScript": "./.github/lighthouse/set-theme.js",
+      "chromePath": "/usr/bin/google-chrome-stable",
+      "puppeteerLaunchOptions": {
+        "args": ["--disable-gpu", "--no-sandbox", "--no-zygote"]
       }
     },
     "assert": {
