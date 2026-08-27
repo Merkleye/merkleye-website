@@ -1,6 +1,6 @@
 # merkleye-website
 
-The public marketing/docs site for [Merkleye](https://github.com/wesleykirkland/merkleye),
+The public marketing/docs site for [Merkleye](https://github.com/merkleye/merkleye),
 a self-hosted Certificate Transparency watchtower.
 
 Built with [Astro](https://astro.build) + [Tailwind CSS](https://tailwindcss.com).
@@ -8,7 +8,7 @@ Static output, effectively zero shipped JavaScript. See
 [`docs/DESIGN.md`](docs/DESIGN.md) for the framework and hosting rationale.
 
 This repo is the marketing site only. The product's own dashboard UI lives
-in [merkleye-ui](https://github.com/wesleykirkland/merkleye-ui) — a separate
+in [merkleye-ui](https://github.com/merkleye/merkleye-ui) — a separate
 project.
 
 ## Development
@@ -67,5 +67,5 @@ from forks, since `pull_request` runs from forks don't get repo secrets.
 
 ## License
 
-Apache-2.0, matching the core [Merkleye](https://github.com/wesleykirkland/merkleye)
+Apache-2.0, matching the core [Merkleye](https://github.com/merkleye/merkleye)
 project.
