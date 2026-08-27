@@ -15,6 +15,52 @@ const {
 <!doctype html>
 <html lang="en">
   <head>
+    <script is:inline>
+      (function () {
+        var STORAGE_KEY = "theme";
+        var DARK = "#05080a";
+        var LIGHT = "#f7f9fa";
+
+        function effectiveTheme() {
+          var stored = localStorage.getItem(STORAGE_KEY);
+          if (stored === "light" || stored === "dark") return stored;
+          return matchMedia("(prefers-color-scheme: light)").matches
+            ? "light"
+            : "dark";
+        }
+
+        function syncMeta() {
+          var meta = document.querySelector('meta[name="theme-color"]');
+          if (meta) {
+            meta.setAttribute(
+              "content",
+              effectiveTheme() === "light" ? LIGHT : DARK,
+            );
+          }
+        }
+
+        var stored = localStorage.getItem(STORAGE_KEY);
+        if (stored === "light" || stored === "dark") {
+          document.documentElement.setAttribute("data-theme", stored);
+        }
+        syncMeta();
+
+        matchMedia("(prefers-color-scheme: light)").addEventListener(
+          "change",
+          function () {
+            if (!localStorage.getItem(STORAGE_KEY)) syncMeta();
+          },
+        );
+
+        window.__toggleTheme = function () {
+          var next = effectiveTheme() === "dark" ? "light" : "dark";
+          localStorage.setItem(STORAGE_KEY, next);
+          document.documentElement.setAttribute("data-theme", next);
+          syncMeta();
+          return next;
+        };
+      })();
+    </script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />

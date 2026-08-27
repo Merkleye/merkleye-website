@@ -8,13 +8,13 @@ const stats = [
 
 <section id="top" class="relative overflow-hidden bg-grid">
   <div
-    class="pointer-events-none absolute inset-x-0 top-0 h-[560px] bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,rgba(53,208,192,0.14),transparent)]"
+    class="pointer-events-none absolute inset-x-0 top-0 h-[560px] bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,var(--mk-hero-glow),transparent)]"
   >
   </div>
 
   <div class="relative mx-auto max-w-6xl px-6 pt-20 pb-24 md:pt-28 md:pb-32">
     <div class="grid items-center gap-16 lg:grid-cols-[1.1fr_0.9fr]">
-      <div>
+      <div class="min-w-0">
         <div
           class="mb-6 inline-flex items-center gap-2 rounded-full border border-(--color-border) bg-(--color-surface) px-3 py-1 font-mono text-xs text-(--color-ink-muted)"
         >
@@ -47,7 +47,7 @@ const stats = [
           </a>
           <a
             href="https://github.com/wesleykirkland/merkleye"
-            class="rounded-md border border-(--color-border) px-5 py-2.5 text-sm font-medium text-(--color-ink) transition-colors hover:border-(--color-accent-dim) hover:text-(--color-accent)"
+            class="rounded-md border border-(--color-border) px-5 py-2.5 text-sm font-medium text-(--color-ink) transition-colors hover:border-(--color-accent-dim) hover:text-(--color-accent-dim)"
           >
             View source on GitHub →
           </a>
@@ -69,9 +69,9 @@ const stats = [
         </dl>
       </div>
 
-      <div class="relative mx-auto w-full max-w-md">
+      <div class="relative mx-auto w-full min-w-0 max-w-md">
         <div
-          class="rounded-xl border border-(--color-border) bg-(--color-surface) shadow-[0_0_0_1px_rgba(255,255,255,0.02),0_20px_60px_-15px_rgba(0,0,0,0.6)]"
+          class="rounded-xl border border-(--color-border) bg-(--color-surface) shadow-(--mk-shadow-card)"
         >
           <div
             class="flex items-center gap-1.5 border-b border-(--color-border-soft) px-4 py-3"
@@ -85,13 +85,13 @@ const stats = [
           </div>
           <pre
             class="overflow-x-auto p-4 font-mono text-[12.5px] leading-relaxed text-(--color-ink-muted)"><code><span class="text-(--color-ink-faint)"># cert observed on a CT log, seconds after issuance</span>
-<span class="text-(--color-accent)">domain</span>:   secure-paypaI.com  <span class="text-(--color-warn)">← homoglyph of paypal.com</span>
-<span class="text-(--color-accent)">issuer</span>:   Let's Encrypt (unexpected: not authorized)
-<span class="text-(--color-accent)">source</span>:   oak2024h1.ct.letsencrypt.org
-<span class="text-(--color-accent)">dedup</span>:    sha256(der) 8f21…a04c
-<span class="text-(--color-accent)">match</span>:    dnstwist variant, eTLD+1 reduced
-<span class="text-(--color-accent)">score</span>:    <span class="text-(--color-danger)">87 / 100</span>  (additive, explainable)
-<span class="text-(--color-accent)">notify</span>:   slack, webhook  <span class="text-(--color-ink-faint)">→ sent in 0.4s</span></code></pre>
+<span class="text-(--color-accent-dim)">domain</span>:   secure-paypaI.com  <span class="text-(--color-warn)">← homoglyph of paypal.com</span>
+<span class="text-(--color-accent-dim)">issuer</span>:   Let's Encrypt (unexpected: not authorized)
+<span class="text-(--color-accent-dim)">source</span>:   oak2024h1.ct.letsencrypt.org
+<span class="text-(--color-accent-dim)">dedup</span>:    sha256(der) 8f21…a04c
+<span class="text-(--color-accent-dim)">match</span>:    dnstwist variant, eTLD+1 reduced
+<span class="text-(--color-accent-dim)">score</span>:    <span class="text-(--color-danger)">87 / 100</span>  (additive, explainable)
+<span class="text-(--color-accent-dim)">notify</span>:   slack, webhook  <span class="text-(--color-ink-faint)">→ sent in 0.4s</span></code></pre>
         </div>
         <div
           class="pointer-events-none absolute -inset-6 -z-10 rounded-2xl bg-(--color-accent)/[0.06] blur-2xl"

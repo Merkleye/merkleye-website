@@ -1,59 +1,57 @@
-@import "tailwindcss";
+@import "@merkleye/design-tokens/css";
 
-@theme {
-  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
-    Helvetica, Arial, sans-serif;
-  --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", "Fira Code",
-    Menlo, Consolas, "Liberation Mono", monospace;
-
-  --color-bg: #05080a;
-  --color-surface: #0b1116;
-  --color-surface-2: #101922;
-  --color-border: #1c2830;
-  --color-border-soft: #141d24;
-  --color-ink: #e7eef2;
-  --color-ink-muted: #8fa1ab;
-  --color-ink-faint: #5c7078;
-  --color-accent: #35d0c0;
-  --color-accent-dim: #1c8f85;
-  --color-accent-ink: #04120f;
-  --color-warn: #e8a33d;
-  --color-danger: #e8654a;
-}
-
+/* Hero radial glow — site-specific effect, not part of the shared token
+   set, but themed the same way the package themes --mk-shadow-card /
+   --mk-text-glow: opacity and hue tuned per theme (see accessibility.md
+   > "Effects that don't survive the swap" in @merkleye/design-tokens). */
 :root {
-  color-scheme: dark;
+  --mk-hero-glow: rgba(53, 208, 192, 0.14);
 }
 
-html {
-  background: var(--color-bg);
-  scroll-behavior: smooth;
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --mk-hero-glow: rgba(15, 156, 140, 0.08);
+  }
 }
 
-body {
-  background: var(--color-bg);
-  color: var(--color-ink);
-  font-family: var(--font-sans);
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
+:root[data-theme="light"] {
+  --mk-hero-glow: rgba(15, 156, 140, 0.08);
 }
 
-::selection {
-  background: var(--color-accent);
-  color: var(--color-accent-ink);
+:root[data-theme="dark"] {
+  --mk-hero-glow: rgba(53, 208, 192, 0.14);
 }
 
-.font-mono {
-  font-feature-settings: "liga" 0;
+/* Theme toggle icon — shows the icon matching the *current* theme (sun in
+   light, moon in dark), mirroring the same three-state precedence as the
+   color tokens above: system preference by default, explicit data-theme
+   override wins either direction. */
+.theme-toggle .icon-sun {
+  display: none;
+}
+.theme-toggle .icon-moon {
+  display: block;
 }
 
-.bg-grid {
-  background-image:
-    linear-gradient(to right, var(--color-border-soft) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--color-border-soft) 1px, transparent 1px);
-  background-size: 44px 44px;
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) .theme-toggle .icon-sun {
+    display: block;
+  }
+  :root:not([data-theme="dark"]) .theme-toggle .icon-moon {
+    display: none;
+  }
 }
 
-.text-glow {
-  text-shadow: 0 0 40px rgba(53, 208, 192, 0.25);
+:root[data-theme="light"] .theme-toggle .icon-sun {
+  display: block;
+}
+:root[data-theme="light"] .theme-toggle .icon-moon {
+  display: none;
+}
+
+:root[data-theme="dark"] .theme-toggle .icon-sun {
+  display: none;
+}
+:root[data-theme="dark"] .theme-toggle .icon-moon {
+  display: block;
 }

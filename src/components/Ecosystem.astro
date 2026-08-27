@@ -29,7 +29,7 @@ const roadmap = [
 <section id="ecosystem" class="border-t border-(--color-border-soft) py-24">
   <div class="mx-auto max-w-6xl px-6">
     <div class="max-w-2xl">
-      <p class="font-mono text-xs tracking-widest text-(--color-accent) uppercase">
+      <p class="font-mono text-xs tracking-widest text-(--color-accent-dim) uppercase">
         Ecosystem
       </p>
       <h2 class="mt-3 text-3xl font-semibold tracking-tight text-(--color-ink) sm:text-4xl">
@@ -51,7 +51,7 @@ const roadmap = [
               </span>
             </div>
             <p class="mt-3 flex-1 text-sm leading-relaxed text-(--color-ink-muted)">{p.body}</p>
-            <span class="mt-5 text-sm font-medium text-(--color-accent) group-hover:underline">
+            <span class="mt-5 text-sm font-medium text-(--color-accent-dim) group-hover:underline">
               View repository →
             </span>
           </a>
@@ -69,7 +69,7 @@ const roadmap = [
             <li
               class={`flex items-center gap-2 rounded-md border px-3 py-1.5 text-sm ${
                 r.status === "done"
-                  ? "border-(--color-accent-dim) bg-(--color-accent)/10 text-(--color-accent)"
+                  ? "border-(--color-accent-dim) bg-(--color-accent)/3 text-(--color-accent-dim)"
                   : "border-(--color-border) text-(--color-ink-muted)"
               }`}
             >
