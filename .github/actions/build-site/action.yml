@@ -4,6 +4,16 @@ description: >
   the Astro site into dist/. Callers must check out the repo first — a local
   composite action can only be resolved after its own repo is on disk.
 
+inputs:
+  npm-token:
+    description: >
+      Read-only GitHub token for npm.pkg.github.com, used to install
+      @merkleye/design-tokens from the private Merkleye/design repo. The
+      workflow's own GITHUB_TOKEN can't read packages from a different
+      repo, so this must be a PAT with read:packages + access to
+      Merkleye/design, passed in by the caller as a secret.
+    required: true
+
 runs:
   using: composite
   steps:
@@ -19,6 +29,8 @@ runs:
 
     - run: npm ci
       shell: bash
+      env:
+        NODE_AUTH_TOKEN: ${{ inputs.npm-token }}
 
     - run: npm run build
       shell: bash
