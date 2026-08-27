@@ -7,11 +7,12 @@ description: >
 inputs:
   npm-token:
     description: >
-      Read-only GitHub token for npm.pkg.github.com, used to install
-      @merkleye/design-tokens from the private Merkleye/design repo. The
-      workflow's own GITHUB_TOKEN can't read packages from a different
-      repo, so this must be a PAT with read:packages + access to
-      Merkleye/design, passed in by the caller as a secret.
+      Token for npm.pkg.github.com, used to install @merkleye/design-tokens
+      from the private Merkleye/design repo. Pass the workflow's own
+      GITHUB_TOKEN — reading a private package from another repo in the
+      same org works as long as that package's "Manage Actions access"
+      list includes this repo (set on the package itself, not here), and
+      the calling job requests `permissions: packages: read`.
     required: true
 
 runs:

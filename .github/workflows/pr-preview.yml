@@ -23,6 +23,7 @@ jobs:
     timeout-minutes: 15
     permissions:
       contents: read
+      packages: read
       pull-requests: write
       statuses: write
     steps:
@@ -30,7 +31,7 @@ jobs:
 
       - uses: ./.github/actions/build-site
         with:
-          npm-token: ${{ secrets.MERKLEYE_PACKAGES_TOKEN }}
+          npm-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Record deploy time
         id: timestamp
