@@ -12,7 +12,7 @@ describe("Architecture", () => {
     const html = await renderAstro(Architecture);
     const titles = [
       "CT logs",
-      "certspotter sidecar",
+      "Firehose sidecar",
       "Normalize · dedup · match",
       "Policy &amp; score",
       "Persist",
