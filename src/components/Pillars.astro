@@ -19,7 +19,7 @@ const pillars = [
     summary:
       "Firehose ingestion means detection latency is bounded by CT log propagation, not by how often you remember to query.",
     points: [
-      "Tails every RFC6962 and static-ct-api log continuously via a certspotter sidecar — no polling, no per-domain API calls.",
+      "Tails every RFC6962 and static-ct-api log continuously — an unfiltered certstream sidecar, or certspotter's pre-filtered watchlist. No polling, no per-domain API calls.",
       "Every certificate is tested against your hash set as it's observed, not on a batch schedule.",
       "Notifications fire (SMTP, webhook, Discord, Slack) the moment a match clears policy — while the phishing infra is still being staged.",
     ],

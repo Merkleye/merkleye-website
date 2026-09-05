@@ -1,0 +1,195 @@
+---
+// Source of truth for merkleye-website's /performance page. Maintained here,
+// not in merkleye-website: page changes go through this repo's review the
+// same way claim wording goes through internal/perf/claims.go. Copied
+// verbatim into merkleye-website/src/pages/performance.astro by
+// scripts/sync-perf-dashboard.sh on every release — see docs/PERFORMANCE.md.
+import Layout from "../layouts/Layout.astro";
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+import claimsData from "../data/perf-claims.json";
+
+interface Metric {
+  name: string;
+  value: number;
+  unit: string;
+  note?: string;
+}
+
+interface ClaimResult {
+  verdict: "PASS" | "QUALIFIED" | "FAIL";
+  headline: string;
+  method: string;
+  metrics: Metric[];
+  notes: string[];
+}
+
+interface Claim {
+  id: string;
+  title: string;
+  claim: string;
+  threshold: string;
+  sources: { file: string }[];
+  result: ClaimResult;
+}
+
+interface ClaimsExport {
+  environment: {
+    generated_at: string;
+    go_version: string;
+    os: string;
+    arch: string;
+    num_cpu: number;
+    race_detector: boolean;
+    store_engine: string;
+    variant_source: string;
+    merkleye_revision: string;
+    release_version?: string;
+    release_url?: string;
+  };
+  totals: { PASS: number; QUALIFIED: number; TOTAL: number };
+  claims: Claim[];
+}
+
+const { environment, totals, claims } = claimsData as unknown as ClaimsExport;
+
+const failCount = totals.TOTAL - totals.PASS - totals.QUALIFIED;
+
+const verdictStyles: Record<ClaimResult["verdict"], string> = {
+  PASS: "border-(--color-accent-dim) bg-(--color-accent)/10 text-(--color-accent)",
+  QUALIFIED: "border-(--color-warn) bg-(--color-warn)/10 text-(--color-warn)",
+  FAIL: "border-(--color-danger) bg-(--color-danger)/10 text-(--color-danger)",
+};
+
+function formatValue(value: number): string {
+  if (Number.isInteger(value)) return value.toLocaleString();
+  const abs = Math.abs(value);
+  const digits = abs >= 1000 ? 0 : abs >= 1 ? 2 : 4;
+  return value.toLocaleString(undefined, { maximumFractionDigits: digits });
+}
+
+const cleanRevision = environment.merkleye_revision.replace(/-dirty$/, "");
+const revisionUrl = `https://github.com/merkleye/merkleye/commit/${cleanRevision}`;
+---
+
+<Layout
+  title="Merkleye — Performance & correctness, measured"
+  description="Every performance and correctness claim on merkleye.com, measured against a real standalone instance — thresholds, methods, metrics, and the raw data to check it yourself."
+>
+  <Nav />
+  <main>
+    <section class="border-t border-(--color-border-soft) py-24">
+      <div class="mx-auto max-w-4xl px-6">
+        <p class="font-mono text-xs tracking-widest text-(--color-accent-dim) uppercase">
+          Performance &amp; correctness
+        </p>
+        <h1 class="mt-3 text-3xl font-semibold tracking-tight text-(--color-ink) sm:text-4xl">
+          Every claim on this site, measured against a real instance.
+        </h1>
+        <p class="mt-5 max-w-2xl text-base leading-relaxed text-(--color-ink-muted)">
+          A marketing number nobody measures is indistinguishable from a
+          guess. <code class="rounded bg-(--color-surface-2) px-1.5 py-0.5 font-mono text-[13px] text-(--color-ink)">internal/perf</code>
+          stands up a complete Merkleye deployment in-process and measures
+          every claim below against it — no mocks between the hook and the
+          webhook. This page and the raw data below are synced automatically
+          from that measurement on every Merkleye release.
+        </p>
+
+        <div class="mt-8 flex flex-wrap items-center gap-3">
+          <span class={`rounded-md border px-3 py-1 font-mono text-sm ${verdictStyles.PASS}`}>{totals.PASS} PASS</span>
+          <span class={`rounded-md border px-3 py-1 font-mono text-sm ${verdictStyles.QUALIFIED}`}>{totals.QUALIFIED} QUALIFIED</span>
+          <span class={`rounded-md border px-3 py-1 font-mono text-sm ${verdictStyles.FAIL}`}>{failCount} FAIL</span>
+          <span class="font-mono text-sm text-(--color-ink-faint)">of {totals.TOTAL} claims</span>
+        </div>
+
+        <div class="mt-8 rounded-lg border border-(--color-border-soft) bg-(--color-surface-2)/60 p-5 text-sm">
+          <div class="grid gap-x-8 gap-y-2 sm:grid-cols-2">
+            <div class="flex items-center justify-between gap-4">
+              <span class="text-(--color-ink-faint)">Measured</span>
+              <span class="font-mono text-(--color-ink)">{environment.generated_at}</span>
+            </div>
+            <div class="flex items-center justify-between gap-4">
+              <span class="text-(--color-ink-faint)">Revision</span>
+              <a href={revisionUrl} class="font-mono text-(--color-accent-dim) hover:text-(--color-accent)">{environment.merkleye_revision}</a>
+            </div>
+            {environment.release_version && environment.release_url && (
+              <div class="flex items-center justify-between gap-4">
+                <span class="text-(--color-ink-faint)">Released as</span>
+                <a href={environment.release_url} class="font-mono text-(--color-accent-dim) hover:text-(--color-accent)">{environment.release_version}</a>
+              </div>
+            )}
+            <div class="flex items-center justify-between gap-4">
+              <span class="text-(--color-ink-faint)">Runtime</span>
+              <span class="font-mono text-(--color-ink)">{environment.go_version} · {environment.os}/{environment.arch} · {environment.num_cpu} cores</span>
+            </div>
+            <div class="flex items-center justify-between gap-4">
+              <span class="text-(--color-ink-faint)">Store engine</span>
+              <span class="font-mono text-(--color-ink)">{environment.store_engine}</span>
+            </div>
+            <div class="flex items-center justify-between gap-4">
+              <span class="text-(--color-ink-faint)">Variant source</span>
+              <span class="font-mono text-(--color-ink)">{environment.variant_source}</span>
+            </div>
+            <div class="flex items-center justify-between gap-4">
+              <span class="text-(--color-ink-faint)">Race detector</span>
+              <span class="font-mono text-(--color-ink)">{environment.race_detector ? "on" : "off"}</span>
+            </div>
+          </div>
+          <div class="mt-4 flex flex-wrap gap-x-5 gap-y-1 border-t border-(--color-border-soft) pt-4 text-(--color-ink-faint)">
+            <a href="https://github.com/merkleye/merkleye/blob/main/docs/PERFORMANCE.md" class="hover:text-(--color-ink)">Methodology</a>
+            <a href="https://github.com/merkleye/merkleye" class="hover:text-(--color-ink)">Reproduce it: make perf</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="claims" class="border-t border-(--color-border-soft) py-16">
+      <div class="mx-auto max-w-4xl px-6">
+        <div class="flex flex-col gap-6">
+          {claims.map((c) => (
+            <article class="rounded-xl border border-(--color-border) bg-(--color-surface) p-6 sm:p-7">
+              <div class="flex flex-wrap items-center gap-3">
+                <span class="font-mono text-xs text-(--color-ink-faint)">{c.id}</span>
+                <span class={`rounded-md border px-2.5 py-0.5 font-mono text-xs ${verdictStyles[c.result.verdict]}`}>{c.result.verdict}</span>
+                <h2 class="text-lg font-semibold text-(--color-ink)">{c.title}</h2>
+              </div>
+              <p class="mt-3 text-sm leading-relaxed text-(--color-ink-muted)">{c.claim}</p>
+              <p class="mt-3 font-mono text-xs text-(--color-ink-faint)">{c.threshold}</p>
+              <p class="mt-4 text-sm font-medium leading-relaxed text-(--color-ink)">{c.result.headline}</p>
+
+              <details class="mt-4">
+                <summary class="cursor-pointer font-mono text-xs text-(--color-accent-dim) hover:text-(--color-accent)">
+                  Method, metrics &amp; notes
+                </summary>
+                <div class="mt-4 space-y-4 border-t border-(--color-border-soft) pt-4">
+                  <p class="text-sm leading-relaxed text-(--color-ink-muted)">{c.result.method}</p>
+
+                  <div class="divide-y divide-(--color-border-soft) rounded-lg border border-(--color-border-soft)">
+                    {c.result.metrics.map((m) => (
+                      <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 px-4 py-2.5 text-sm">
+                        <div>
+                          <span class="font-mono text-(--color-ink-muted)">{m.name}</span>
+                          {m.note && <span class="ml-2 text-xs text-(--color-ink-faint)">— {m.note}</span>}
+                        </div>
+                        <span class="font-mono whitespace-nowrap text-(--color-ink)">{formatValue(m.value)} {m.unit}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <ul class="list-disc space-y-2 pl-5 text-sm leading-relaxed text-(--color-ink-faint)">
+                    {c.result.notes.map((n) => <li>{n}</li>)}
+                  </ul>
+                </div>
+              </details>
+
+              <p class="mt-4 font-mono text-[11px] text-(--color-ink-faint)">
+                Appears on the site in: {c.sources.map((s) => s.file.replace(/^src\/components\//, "").replace(/\.astro$/, "")).join(", ")}
+              </p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>

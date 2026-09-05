@@ -36,6 +36,7 @@ src/
   pages/        route-level pages (index.astro is the whole site today)
   styles/       global.css — Tailwind + design tokens (colors, fonts)
 public/         static assets served as-is (favicon, etc.)
+scripts/        build-time tooling (security header generation + verification)
 docs/           project docs, including the stack decision record
 ```
 
@@ -47,6 +48,49 @@ it once under **Settings → Pages → Source: GitHub Actions**.
 
 Cloudflare Pages is the recommended production host long-term; see
 [`docs/DESIGN.md`](docs/DESIGN.md) for why and how to switch.
+
+### Security headers
+
+`npm run build` runs `scripts/generate-headers.mjs`, which writes `dist/_headers`
+— the file [Cloudflare Pages reads](https://developers.cloudflare.com/pages/configuration/headers/)
+to set response headers. It carries HSTS, `X-Frame-Options`, `X-Content-Type-Options`,
+`Referrer-Policy`, `Permissions-Policy`, and a `default-src 'none'` CSP.
+
+The CSP has no `unsafe-inline`: the site's two inline scripts (the theme
+bootstrap that prevents a flash of the wrong theme, and Astro's bundled module
+script) are pinned by SHA-256 hash. Those hashes change whenever the scripts do,
+which is why the file is generated at build time rather than committed under
+`public/`.
+
+`npm run verify:headers` serves `dist/` with those headers actually applied and
+loads every built page in Chrome, failing on any CSP violation or blocked
+request. Both the PR preview and the production deploy run it before publishing
+— Lighthouse serves `dist/` through its own static server, which ignores
+`_headers`, so nothing else in CI would catch a policy that blanks the site.
+
+Adding an external script, style, font, or analytics endpoint means widening the
+CSP in the generator; `verify:headers` is what tells you that you forgot.
+
+#### HSTS preload
+
+The HSTS header is `max-age=63072000; includeSubDomains; preload`, which meets
+the [preload list's submission requirements](https://hstspreload.org/#submission-requirements).
+Shipping the header is only half of it — **`merkleye.com` still has to be
+submitted at [hstspreload.org](https://hstspreload.org)** once this is deployed.
+Until then the header protects returning visitors only; preloading is what
+closes the first-visit gap.
+
+`includeSubDomains` was safe to commit to at the time of writing: CT logs and a
+DNS sweep showed only `merkleye.com` and `www.merkleye.com`, both HTTPS with
+HTTP→HTTPS redirects, and no mail/dev subdomains to strand. That is a standing
+constraint, not a one-time check — **every future `*.merkleye.com` host must
+serve valid HTTPS from the day it gets DNS**, or browsers will refuse to reach
+it. Getting removed from the preload list takes months and ships on browser
+release trains, so it isn't a quick rollback.
+
+`verify:headers` enforces the eligibility rules (`max-age` ≥ 1 year,
+`includeSubDomains`, `preload`) so the header can't quietly drift out of
+qualification after submission.
 
 ### PR previews
 

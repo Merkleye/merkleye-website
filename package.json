@@ -6,9 +6,15 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro check && astro build",
+    "build": "astro check && astro build && node scripts/generate-headers.mjs",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "typecheck": "astro check",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "verify:headers": "node scripts/verify-headers.mjs",
+    "prepare": "husky"
   },
   "dependencies": {
     "@merkleye/design-tokens": "^1.1.0",
@@ -17,9 +23,15 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.4",
     "@tailwindcss/vite": "^4.1.6",
+    "@types/jsdom": "^30.0.0",
+    "@types/node": "^26.4.0",
+    "@vitest/coverage-v8": "^4.1.11",
+    "husky": "^9.1.7",
+    "jsdom": "^30.0.1",
     "puppeteer-core": "^25.9.0",
     "tailwindcss": "^4.1.6",
     "typescript": "^6.0.0",
+    "vitest": "^4.1.11",
     "wrangler": "^4.125.0"
   }
 }

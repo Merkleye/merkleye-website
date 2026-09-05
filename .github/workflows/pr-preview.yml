@@ -33,10 +33,24 @@ jobs:
         with:
           npm-token: ${{ secrets.GITHUB_TOKEN }}
 
+      # Serves dist/ with the generated _headers actually applied and loads every
+      # page in Chrome. Lighthouse below audits dist/ through its own static
+      # server, which ignores _headers, so nothing else in CI would notice a CSP
+      # that blocks the site's inline scripts — and the CSP hashes are generated
+      # per build, so a source change can invalidate them silently.
+      - name: Verify security headers do not break the site
+        env:
+          CHROME_PATH: /usr/bin/google-chrome-stable
+        run: npm run verify:headers
+
       # Deploy and the sticky preview comment come from the shared template
       # — they were identical to Merkleye/design's, down to the comment body.
-      # The build above and the Lighthouse gate below stay here, because they
-      # are the parts that are actually this repo's.
+      # The build and header check above and the Lighthouse gate below stay
+      # here, because they are the parts that are actually this repo's.
+      #
+      # main's "Record deploy time" step is gone rather than dropped: the
+      # action timestamps the comment itself, so keeping it here would have
+      # left an unused step output behind.
       - name: Deploy preview to Cloudflare Pages
         id: deploy
         uses: Merkleye/github-templates/.github/actions/cf-pages-deploy@main
