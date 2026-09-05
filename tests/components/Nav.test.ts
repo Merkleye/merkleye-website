@@ -3,7 +3,7 @@ import Nav from "../../src/components/Nav.astro";
 import { renderAstro } from "../support/container";
 
 describe("Nav", () => {
-  it("links every nav item to an in-page anchor", async () => {
+  it("links every nav item to a homepage anchor, so it still resolves from other pages", async () => {
     const html = await renderAstro(Nav);
     for (const id of [
       "pillars",
@@ -12,8 +12,13 @@ describe("Nav", () => {
       "self-hosting",
       "ecosystem",
     ]) {
-      expect(html).toContain(`href="#${id}"`);
+      expect(html).toContain(`href="/#${id}"`);
     }
+  });
+
+  it("links to the performance dashboard page", async () => {
+    const html = await renderAstro(Nav);
+    expect(html).toContain('href="/performance"');
   });
 
   it("renders both the dark and light brand logo variants", async () => {

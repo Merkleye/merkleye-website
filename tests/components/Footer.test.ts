@@ -18,8 +18,13 @@ describe("Footer", () => {
     );
   });
 
-  it("links back to the top of the page", async () => {
+  it("links back to the homepage top, so it still resolves from other pages", async () => {
     const html = await renderAstro(Footer);
-    expect(html).toContain('href="#top"');
+    expect(html).toContain('href="/#top"');
+  });
+
+  it("links to the performance dashboard page", async () => {
+    const html = await renderAstro(Footer);
+    expect(html).toContain('href="/performance"');
   });
 });
