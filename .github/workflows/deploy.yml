@@ -26,6 +26,14 @@ jobs:
         with:
           npm-token: ${{ secrets.GITHUB_TOKEN }}
 
+      # Gates production on the same check the PR preview runs: the CSP pins the
+      # site's inline scripts by hash, so a bad policy would only surface as a
+      # blank page in prod. See scripts/verify-headers.mjs.
+      - name: Verify security headers do not break the site
+        env:
+          CHROME_PATH: /usr/bin/google-chrome-stable
+        run: npm run verify:headers
+
       - name: Publish to Cloudflare Pages
         id: deploy
         uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4

@@ -33,6 +33,16 @@ jobs:
         with:
           npm-token: ${{ secrets.GITHUB_TOKEN }}
 
+      # Serves dist/ with the generated _headers actually applied and loads every
+      # page in Chrome. Lighthouse below audits dist/ through its own static
+      # server, which ignores _headers, so nothing else in CI would notice a CSP
+      # that blocks the site's inline scripts — and the CSP hashes are generated
+      # per build, so a source change can invalidate them silently.
+      - name: Verify security headers do not break the site
+        env:
+          CHROME_PATH: /usr/bin/google-chrome-stable
+        run: npm run verify:headers
+
       - name: Record deploy time
         id: timestamp
         run: echo "now=$(date -u +'%Y-%m-%d %H:%M:%S UTC')" >> "$GITHUB_OUTPUT"

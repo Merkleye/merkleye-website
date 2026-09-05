@@ -6,13 +6,14 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro check && astro build",
+    "build": "astro check && astro build && node scripts/generate-headers.mjs",
     "preview": "astro preview",
     "astro": "astro",
     "typecheck": "astro check",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
+    "verify:headers": "node scripts/verify-headers.mjs",
     "prepare": "husky"
   },
   "dependencies": {
