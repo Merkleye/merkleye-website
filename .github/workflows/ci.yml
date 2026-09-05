@@ -1,0 +1,51 @@
+name: CI
+
+# Fast, secret-free validation for every push and PR against main: type
+# checks (astro check, via the build) and the unit test suite, gated at
+# 100% coverage (see vitest.config.ts's coverage.thresholds). Runs for
+# fork PRs too, unlike pr-preview.yml, since it only needs the read-only
+# default GITHUB_TOKEN to pull @merkleye/design-tokens.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Configure GitHub Packages auth
+        run: echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" >> ~/.npmrc
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: ./.github/actions/build-site
+        with:
+          npm-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run unit tests with coverage
+        run: npm run test:coverage
+
+      # Reporting only, and only once tests actually pass — the 100%
+      # coverage gate above already fails this job on its own, so a Codecov
+      # outage shouldn't block CI on top of that. No token needed: this repo
+      # is public and Codecov is configured for tokenless upload.
+      - name: Upload coverage reports to Codecov
+        continue-on-error: true
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
+        with:
+          files: ./coverage/lcov.info
+          token: ${{ secrets.CODECOV_TOKEN }}
+          # fail_ci_if_error: false

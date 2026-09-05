@@ -19,12 +19,16 @@
           > becomes roughly <strong class="text-(--color-ink)">100,000</strong> lookalike
           variants to monitor. A query-per-domain API model needs 100,000
           requests to sweep that set once. Merkleye doesn't query at all —
-          it tails the CT log stream continuously via SSLMate's <code
+          it subscribes to the unfiltered CT firehose through a self-hosted <code
+            class="rounded bg-(--color-surface-2) px-1.5 py-0.5 font-mono text-[13px] text-(--color-ink)"
+            >certstream</code
+          > sidecar, and every certificate on the stream reaches the matcher.
+          Nothing is filtered upstream, so there is no watchlist to outgrow —
+          which is what makes watching six figures of variants
+          architecturally tractable instead of a rate-limit problem. <code
             class="rounded bg-(--color-surface-2) px-1.5 py-0.5 font-mono text-[13px] text-(--color-ink)"
             >certspotter</code
-          > sidecar and tests every certificate it sees against your hash set
-          in-line. That's what makes watching six figures of variants
-          architecturally tractable instead of a rate-limit problem.
+          > ships alongside it as the lighter, pre-filtered path.
         </p>
         <p class="mt-4 text-base leading-relaxed text-(--color-ink-muted)">
           Global CT issuance runs roughly <strong class="text-(--color-ink)"
