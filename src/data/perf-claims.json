@@ -1,0 +1,1008 @@
+{
+  "schema": "merkleye.perf.claims/v1",
+  "environment": {
+    "generated_at": "2026-09-03T02:34:38.52029Z",
+    "go_version": "go1.27.0",
+    "os": "darwin",
+    "arch": "arm64",
+    "num_cpu": 14,
+    "race_detector": false,
+    "store_engine": "sqlite (in-memory, modernc.org/sqlite, ent schema)",
+    "variant_source": "dnstwist 20250130 (real generator, via python3)",
+    "merkleye_revision": "aee76e7-dirty"
+  },
+  "complete": true,
+  "totals": {
+    "PASS": 10,
+    "QUALIFIED": 4,
+    "TOTAL": 14
+  },
+  "claims": [
+    {
+      "id": "C-01",
+      "title": "Firehose throughput",
+      "claim": "Every certificate on the stream reaches the matcher: 20–30M CT log entries a day, with no upstream watchlist to outgrow.",
+      "sources": [
+        {
+          "file": "src/components/Hero.astro",
+          "probes": [
+            "{ value: \"20–30M\", label: \"CT log entries matched per day\" }"
+          ]
+        },
+        {
+          "file": "src/components/Firehose.astro",
+          "probes": [
+            "\u003e20–30 million entries a day\u003c/strong",
+            "\u003e sidecar, and every certificate on the stream reaches the matcher.",
+            "Nothing is filtered upstream, so there is no watchlist to outgrow —"
+          ]
+        },
+        {
+          "file": "src/components/Pillars.astro",
+          "probes": [
+            "\"Tails every RFC6962 and static-ct-api log continuously — an unfiltered certstream sidecar, or certspotter's pre-filtered watchlist."
+          ]
+        }
+      ],
+      "threshold": "sustained match-stage throughput ≥ 30,000,000 certificates/day (347/s) against a 100k-variant watch set, single core, plus a live tail of a real certstream-server-rust confirming the stream is unfiltered and the matcher keeps ahead of its arrival rate",
+      "result": {
+        "claim_id": "C-01",
+        "verdict": "QUALIFIED",
+        "headline": "809,874 certificates/s on one core against a 115,461-name watch set — 2332× the 30M/day the site claims",
+        "metrics": [
+          {
+            "name": "match_stage_single_core",
+            "value": 809874.2558050279,
+            "unit": "certificates/s"
+          },
+          {
+            "name": "match_stage_single_core_sans",
+            "value": 2166194.9682293823,
+            "unit": "SANs/s"
+          },
+          {
+            "name": "match_stage_single_core_extrapolated",
+            "value": 69973135701.55441,
+            "unit": "certificates/day",
+            "note": "2332× the 30M/day claim"
+          },
+          {
+            "name": "match_stage_all_cores",
+            "value": 274189243194.212,
+            "unit": "certificates/day",
+            "note": "14 cores"
+          },
+          {
+            "name": "firehose_requirement",
+            "value": 30000000,
+            "unit": "certificates/day",
+            "note": "the claim: 347 certificates/s sustained"
+          },
+          {
+            "name": "full_instance_hook_to_persist",
+            "value": 18634.65439513553,
+            "unit": "observations/s",
+            "note": "sqlite (in-memory, modernc.org/sqlite, ent schema), every observation persisted"
+          },
+          {
+            "name": "full_instance_extrapolated",
+            "value": 1610034139.7397099,
+            "unit": "observations/day"
+          },
+          {
+            "name": "certstream_live_feed_measured",
+            "value": 0,
+            "unit": "bool",
+            "note": "no certstream-server-rust was reachable: docker run ghcr.io/reloading01/certstream-server-rust:1.5.6: exit status 1: failed to connect to the docker API at unix:///Users/wesley/.docker/run/docker.sock; check if the path is correct and if the daemon is running: dial unix /Users/wesley/.docker/run/docker.sock: connect: no such file or directory"
+          }
+        ],
+        "notes": [
+          "Two firehose plugins ship, and the claim is about the harder one. certstream subscribes to the full, unfiltered stream and every certificate on it reaches match.Match, so watch-set size is Merkleye's problem rather than an upstream tool's. certspotter is the lighter path: the sidecar holds the log connections and pre-filters against a watchlist file, so the instance only ever sees hits.",
+          "Under the certspotter path only watchlist hits are posted to the instance, so the full-instance number is a ceiling there; on certstream it is the working rate, because nothing is filtered upstream.",
+          "Single-core headroom over the 30M/day claim is 2332×; the claim needs 347 certificates/s and one core delivered 809,874.",
+          "The unfiltered-stream half of this claim was not exercised on this run: docker run ghcr.io/reloading01/certstream-server-rust:1.5.6: exit status 1: failed to connect to the docker API at unix:///Users/wesley/.docker/run/docker.sock; check if the path is correct and if the daemon is running: dial unix /Users/wesley/.docker/run/docker.sock: connect: no such file or directory. Set MERKLEYE_PERF_CERTSTREAM_URL to a running certstream-server-rust, or leave docker available, to measure it."
+        ],
+        "measurement_duration_ms": 1559.390583
+      }
+    },
+    {
+      "id": "C-02",
+      "title": "Watch-set scale",
+      "claim": "20 real domains through dnstwist becomes roughly 100,000 lookalike variants, and all of them are watched on every certificate.",
+      "sources": [
+        {
+          "file": "src/components/Hero.astro",
+          "probes": [
+            "{ value: \"100k+\", label: \"lookalike domains watched per sweep\" }"
+          ]
+        },
+        {
+          "file": "src/components/Firehose.astro",
+          "probes": [
+            "\u003e becomes roughly \u003cstrong class=\"text-(--color-ink)\"\u003e100,000\u003c/strong\u003e lookalike"
+          ]
+        }
+      ],
+      "threshold": "≥ 100,000 variants generated from 20 domains under the shipped default config, every one of them matchable in the built snapshot",
+      "result": {
+        "claim_id": "C-02",
+        "verdict": "QUALIFIED",
+        "headline": "115,438 variants from 23 domains (115,317 matchable), snapshot built in 2ms using 6.06 MB",
+        "metrics": [
+          {
+            "name": "variants_generated",
+            "value": 115438,
+            "unit": "names"
+          },
+          {
+            "name": "variants_per_domain_mean",
+            "value": 5019.04347826087,
+            "unit": "names"
+          },
+          {
+            "name": "variants_per_domain_min",
+            "value": 1542,
+            "unit": "names"
+          },
+          {
+            "name": "variants_per_domain_max",
+            "value": 19299,
+            "unit": "names"
+          },
+          {
+            "name": "variants_matchable",
+            "value": 115317,
+            "unit": "names",
+            "note": "probed through the live matcher, apex and subdomain"
+          },
+          {
+            "name": "variants_unmatchable",
+            "value": 121,
+            "unit": "names"
+          },
+          {
+            "name": "generation_time",
+            "value": 3.657353959,
+            "unit": "s"
+          },
+          {
+            "name": "snapshot_build_time",
+            "value": 1,
+            "unit": "ms"
+          },
+          {
+            "name": "snapshot_heap",
+            "value": 6.06353759765625,
+            "unit": "MB"
+          },
+          {
+            "name": "snapshot_heap_per_variant",
+            "value": 55.07787730210156,
+            "unit": "bytes/name"
+          },
+          {
+            "name": "snapshot_watched",
+            "value": 23,
+            "unit": "domains"
+          },
+          {
+            "name": "snapshot_variants",
+            "value": 115438,
+            "unit": "variants"
+          },
+          {
+            "name": "snapshot_allowlisted",
+            "value": 23,
+            "unit": "names",
+            "note": "watched domains are auto-allowlisted so your own defensive registrations stay quiet"
+          },
+          {
+            "name": "certspotter_watchlist_lines",
+            "value": 115461,
+            "unit": "lines"
+          },
+          {
+            "name": "certspotter_watchlist_size",
+            "value": 2.8205718994140625,
+            "unit": "MB"
+          }
+        ],
+        "notes": [
+          "Per-domain spread: min 1542, median 3731, max 19299 — the website's \"~5,000 each\" is a mean over domains of very different lengths, since the homoglyph fuzzer's output grows with label length.",
+          "Breakdown by fuzzer: homoglyph 109504, insertion 1841, replacement 936, addition 936, bitsquatting 902, tld-swap 322, omission 191, hyphenation 171, transposition 164, vowel-swap 147, subdomain 145, repetition 101, plural 50, various 23, cyrillic 5.",
+          "121 of 115,438 generated variants (0.10%) are on the watchlist but cannot produce a match: subdomain 121 (e.g. ex.ample.com). These are names whose own registrable domain (eTLD+1) is something else, so the variant lookup reduces past them — dnstwist's subdomain fuzzer inserts a dot, and match.Snapshot keys variants by eTLD+1. certspotter would fire the hook for such a certificate and the pipeline would store it without classifying it as a lookalike hit."
+        ],
+        "measurement_duration_ms": 199.422917
+      }
+    },
+    {
+      "id": "C-03",
+      "title": "Watch-set size does not cost lookup time",
+      "claim": "Testing every certificate against six figures of variants is architecturally tractable, not a rate-limit problem.",
+      "sources": [
+        {
+          "file": "src/components/Firehose.astro",
+          "probes": [
+            "architecturally tractable instead of a rate-limit problem."
+          ]
+        }
+      ],
+      "threshold": "per-SAN match latency at 100k variants ≤ 1.5× the latency at 1k variants (flat, not proportional to watch-set size)",
+      "result": {
+        "claim_id": "C-03",
+        "verdict": "PASS",
+        "headline": "100× more variants cost 1.07× the lookup time (449ns → 480ns per SAN)",
+        "metrics": [
+          {
+            "name": "per_san_at_1k_variants",
+            "value": 449.0177891757263,
+            "unit": "ns"
+          },
+          {
+            "name": "per_san_at_10k_variants",
+            "value": 438.0496759221622,
+            "unit": "ns"
+          },
+          {
+            "name": "per_san_at_full_watch_set",
+            "value": 480.2352243416822,
+            "unit": "ns",
+            "note": "100,000 variants"
+          },
+          {
+            "name": "cost_ratio_full_over_1k",
+            "value": 1.0695238271589698,
+            "unit": "×",
+            "note": "1.0 would be perfectly flat; the threshold is 1.5"
+          },
+          {
+            "name": "snapshot_build_1k",
+            "value": 18,
+            "unit": "µs"
+          },
+          {
+            "name": "snapshot_build_full",
+            "value": 1520,
+            "unit": "µs"
+          }
+        ],
+        "notes": [
+          "Two hash lookups per SAN (exact-suffix walk, then eTLD+1 in the variant map), neither of which iterates the watch set — which is why a 100× larger set does not cost 100× the time."
+        ],
+        "measurement_duration_ms": 394.524625
+      }
+    },
+    {
+      "id": "C-04",
+      "title": "Observation-to-alert latency",
+      "claim": "A finding reaches Slack and the webhook 0.4s after the certificate is observed.",
+      "sources": [
+        {
+          "file": "src/components/Hero.astro",
+          "probes": [
+            "→ sent in 0.4s"
+          ]
+        },
+        {
+          "file": "src/components/Pillars.astro",
+          "probes": [
+            "\"Notifications fire (SMTP, webhook, Discord, Slack) the moment a match clears policy"
+          ]
+        }
+      ],
+      "threshold": "p99 ≤ 400ms from POST /internal/v1/observations to webhook delivery, through the full pipeline and a real notification sender",
+      "result": {
+        "claim_id": "C-04",
+        "verdict": "PASS",
+        "headline": "p50 350µs, p99 580µs, max 740µs from hook POST to webhook delivery — the claim is 400ms",
+        "metrics": [
+          {
+            "name": "p50",
+            "value": 0.352916,
+            "unit": "ms"
+          },
+          {
+            "name": "p95",
+            "value": 0.411417,
+            "unit": "ms"
+          },
+          {
+            "name": "p99",
+            "value": 0.581875,
+            "unit": "ms"
+          },
+          {
+            "name": "max",
+            "value": 0.743834,
+            "unit": "ms"
+          },
+          {
+            "name": "samples",
+            "value": 300,
+            "unit": "alerts",
+            "note": "rate limit raised to 6000/min so the limiter is not what is measured"
+          },
+          {
+            "name": "shipped_defaults_p50",
+            "value": 0.350833,
+            "unit": "ms",
+            "note": "rate limit 10/min, burst 30 — the shipped config"
+          },
+          {
+            "name": "shipped_defaults_p95",
+            "value": 0.522,
+            "unit": "ms"
+          },
+          {
+            "name": "shipped_defaults_p99",
+            "value": 0.8655,
+            "unit": "ms"
+          },
+          {
+            "name": "shipped_defaults_max",
+            "value": 0.8655,
+            "unit": "ms"
+          },
+          {
+            "name": "claim_budget",
+            "value": 400,
+            "unit": "ms"
+          },
+          {
+            "name": "headroom_at_p99",
+            "value": 687.4328678839958,
+            "unit": "×"
+          }
+        ],
+        "notes": [
+          "This is the instance's own contribution. End-to-end detection latency also includes the CA submitting to a log, the log's merge delay and certspotter's tailing — none of which Merkleye controls, and none of which are in this number.",
+          "Beyond burst 30 the shipped rate limit (10/min) stops delivering immediately and queues to the outbox instead, where redelivery is on the drain interval rather than in the 0.4s envelope. That is the alert-fatigue guard working as designed, not a latency regression — it is why the headline number is measured at a raised limit, with the shipped-default run (30 samples) reported beside it."
+        ],
+        "measurement_duration_ms": 7520.039792
+      }
+    },
+    {
+      "id": "C-05",
+      "title": "Zero third-party egress",
+      "claim": "No third party sees your domain list: nothing about the watch set leaves the instance.",
+      "sources": [
+        {
+          "file": "src/components/Hero.astro",
+          "probes": [
+            "{ value: \"0\", label: \"third parties see your domain list\" }"
+          ]
+        },
+        {
+          "file": "src/components/Pillars.astro",
+          "probes": [
+            "\"No SaaS relay: run it on a homelab box or an enterprise cluster, same image."
+          ]
+        }
+      ],
+      "threshold": "0 outbound connections to any non-loopback host during a full ingest→alert workload, and every egress-capable package in the tree accounted for as opt-in and off by default",
+      "result": {
+        "claim_id": "C-05",
+        "verdict": "QUALIFIED",
+        "headline": "0 outbound connections to anything but loopback across the whole suite under the shipped configuration, with 8 egress-capable packages all accounted for — enabling SSLMate backfill sends 23 watched domains to api.certspotter.com in 23 requests",
+        "metrics": [
+          {
+            "name": "external_connections_default_config",
+            "value": 0,
+            "unit": "connections",
+            "note": "HTTP requests + resolver dials to non-loopback hosts, under the configuration Merkleye ships"
+          },
+          {
+            "name": "sslmate_backfill_requests_if_enabled",
+            "value": 23,
+            "unit": "requests",
+            "note": "what one backfill sweep sends to api.certspotter.com once ingest.sslmate_backfill.enabled is true"
+          },
+          {
+            "name": "sslmate_backfill_names_disclosed_if_enabled",
+            "value": 23,
+            "unit": "names",
+            "note": "watched domains named in those requests — the watch set, one domain per request"
+          },
+          {
+            "name": "egress_capable_packages",
+            "value": 8,
+            "unit": "packages"
+          },
+          {
+            "name": "unlisted_egress_packages",
+            "value": 0,
+            "unit": "packages",
+            "note": "a non-zero value fails this claim"
+          },
+          {
+            "name": "example_sslmate_backfill_enabled",
+            "value": 0,
+            "unit": "bool",
+            "note": "the one integration that would show a third party your domain list"
+          },
+          {
+            "name": "example_certstream_enabled",
+            "value": 0,
+            "unit": "bool"
+          },
+          {
+            "name": "example_otel_enabled",
+            "value": 0,
+            "unit": "bool"
+          },
+          {
+            "name": "watch_set_names_held_locally",
+            "value": 115461,
+            "unit": "names",
+            "note": "in-process snapshot plus the watchlist file the local sidecar reads"
+          }
+        ],
+        "notes": [
+          "The watch set reaches certspotter through a file on a shared volume, not over a network: certspotter.WriteWatchlist renders it locally and the sidecar reads it. Nothing in the ingest path transmits it.",
+          "Paths that could carry watch-set names, all opt-in and all named in config.yaml: internal/api → the system resolver, through internal/dnsprovider (GET /api/v1/domains/{id}/dns-provider, default on demand); internal/dnsprovider → the system resolver (GET /api/v1/domains/{id}/dns-provider, default on demand); internal/ingest/sslmate → api.certspotter.com (SSLMate) (ingest.sslmate_backfill.enabled, default off); internal/notify → the notification channels in your config (notifications.channels, default whatever you configure); internal/variants → the dnstwist sidecar named by variants.generator_url (variants.generator_url, default a sidecar in your own compose file).",
+          "The source audit covers first-party code. A dependency that dials on Merkleye's behalf — nikoksr/notify's Slack, Discord and SMTP senders — does not appear in it, which is why the runtime recorder is the other half of this measurement rather than a redundant one.",
+          "Scope: this instruments what a Go process does through the standard library. The certspotter sidecar is a separate process and does talk to CT logs — it fetches log entries, it does not upload the watchlist, and its filtering happens locally against the file above."
+        ],
+        "measurement_duration_ms": 17641.2895
+      }
+    },
+    {
+      "id": "C-06",
+      "title": "Sweep cost: firehose vs query-per-domain",
+      "claim": "Sweeping the watch set costs a query-per-domain model 100,000 API requests. Merkleye does not query at all — one continuous log stream.",
+      "sources": [
+        {
+          "file": "src/components/Firehose.astro",
+          "probes": [
+            "variants to monitor. A query-per-domain API model needs 100,000",
+            "\u003cdiv class=\"mt-1 text-xs text-(--color-ink-faint)\"\u003eAPI requests per sweep\u003c/div\u003e",
+            "\u003cdiv class=\"mt-1 text-xs text-(--color-ink-faint)\"\u003econtinuous log stream\u003c/div\u003e"
+          ]
+        }
+      ],
+      "threshold": "0 outbound requests to sweep the full watch set once, against 1 request per watched name for the query-per-domain model",
+      "result": {
+        "claim_id": "C-06",
+        "verdict": "PASS",
+        "headline": "one full sweep of 115,461 watched names cost 0 outbound requests, against 115,461 for a query-per-domain model",
+        "metrics": [
+          {
+            "name": "firehose_requests_per_sweep",
+            "value": 0,
+            "unit": "requests"
+          },
+          {
+            "name": "query_per_domain_requests_per_sweep",
+            "value": 115461,
+            "unit": "requests"
+          },
+          {
+            "name": "names_swept",
+            "value": 115340,
+            "unit": "names"
+          },
+          {
+            "name": "sweep_time",
+            "value": 88,
+            "unit": "ms"
+          },
+          {
+            "name": "website_figure",
+            "value": 100000,
+            "unit": "requests",
+            "note": "the site's round number for the same comparison"
+          }
+        ],
+        "notes": [
+          "The website's panel reads 100,000 vs 1. The 1 is one continuous log stream, held by the certspotter sidecar; the backend itself makes no request at all, which is what this measures.",
+          "A sweep is not a thing Merkleye does. Certificates arrive and are tested as they arrive — the sweep here is a synthetic full pass over the watch set purely to price the comparison."
+        ],
+        "measurement_duration_ms": 88.812417
+      }
+    },
+    {
+      "id": "C-07",
+      "title": "Storage tracks hit rate, not issuance volume",
+      "claim": "Only matches are persisted, so the storage footprint tracks your hit rate rather than global CT issuance.",
+      "sources": [
+        {
+          "file": "src/components/Firehose.astro",
+          "probes": [
+            "are persisted, so your storage footprint tracks your hit rate, not",
+            "\u003cspan class=\"font-mono text-(--color-accent-dim)\"\u003ematches only\u003c/span\u003e"
+          ]
+        }
+      ],
+      "threshold": "under the shipped certspotter configuration nothing is stored for a certificate that does not match; rows and bytes measured for a matching and a non-matching observation on both ingest paths",
+      "result": {
+        "claim_id": "C-07",
+        "verdict": "QUALIFIED",
+        "headline": "0 match rows and 0 alerts for 2,000 non-matching certificates — but each still costs 1,065 bytes of certificate/observation storage once it reaches the pipeline",
+        "metrics": [
+          {
+            "name": "non_matching_match_rows",
+            "value": 0,
+            "unit": "rows",
+            "note": "the claim, and it holds"
+          },
+          {
+            "name": "non_matching_certificate_rows",
+            "value": 2000,
+            "unit": "rows",
+            "note": "persisted before matching, by pipeline.process"
+          },
+          {
+            "name": "non_matching_observation_rows",
+            "value": 2000,
+            "unit": "rows"
+          },
+          {
+            "name": "non_matching_bytes_each",
+            "value": 1064.96,
+            "unit": "bytes"
+          },
+          {
+            "name": "matching_certificate_rows",
+            "value": 2000,
+            "unit": "rows"
+          },
+          {
+            "name": "matching_match_rows",
+            "value": 2000,
+            "unit": "rows"
+          },
+          {
+            "name": "matching_bytes_each",
+            "value": 1935.36,
+            "unit": "bytes"
+          },
+          {
+            "name": "watchlist_forwards_only_watch_set",
+            "value": 1,
+            "unit": "bool",
+            "note": "every watchlist line is a watch-set name, so the sidecar posts only hits"
+          },
+          {
+            "name": "cost_if_every_ct_entry_were_forwarded",
+            "value": 29.754638671875,
+            "unit": "GB/day",
+            "note": "30M entries/day × measured per-observation cost — the storage the sidecar's pre-filter avoids"
+          }
+        ],
+        "notes": [
+          "QUALIFIED rather than PASS: \"only matches are persisted\" is true of the shipped deployment, where certspotter filters against the watchlist before the hook fires, and false of the pipeline on its own. pipeline.process calls UpsertCertificate and RecordObservation before MatchAll, so anything that does reach the backend is stored whether it matches or not.",
+          "That difference is worth 29.75 GB/day if an unfiltered feed is ever wired in — which is what ingest.certstream would be, and it is currently unimplemented (internal/ingest/certstream, TODO(phase-6)). The claim should be read as being about the certspotter deployment.",
+          "Match rows, the part the claim is really about, track hits exactly: 0 for the non-matching batch, 2000 for the matching one."
+        ],
+        "measurement_duration_ms": 5149.423041
+      }
+    },
+    {
+      "id": "C-08",
+      "title": "Per-certificate processing, no batch schedule",
+      "claim": "Every certificate is tested as it is observed, not on a batch schedule, so detection latency is bounded by CT log propagation rather than a poll interval.",
+      "sources": [
+        {
+          "file": "src/components/Pillars.astro",
+          "probes": [
+            "\"Every certificate is tested against your hash set as it's observed, not on a batch schedule.\",",
+            "Firehose ingestion means detection latency is bounded by CT log propagation, not by how often you remember to query."
+          ]
+        }
+      ],
+      "threshold": "a single certificate arriving alone is alerted within the same latency envelope as one arriving in a burst — no accumulation window, no scheduled sweep",
+      "result": {
+        "claim_id": "C-08",
+        "verdict": "PASS",
+        "headline": "a single certificate arriving alone alerts in 760µs, against a burst p99 of 1ms — no accumulation window",
+        "metrics": [
+          {
+            "name": "lone_arrival",
+            "value": 0.764625,
+            "unit": "ms",
+            "note": "idle instance, nothing else in flight"
+          },
+          {
+            "name": "spaced_arrivals_max",
+            "value": 3.790708,
+            "unit": "ms",
+            "note": "3 certificates, 2s apart"
+          },
+          {
+            "name": "burst_p99",
+            "value": 1.315708,
+            "unit": "ms",
+            "note": "100 certificates back to back"
+          },
+          {
+            "name": "burst_max",
+            "value": 1.452792,
+            "unit": "ms"
+          },
+          {
+            "name": "envelope",
+            "value": 20,
+            "unit": "ms",
+            "note": "the bar: 3× burst p99, floored at 20ms"
+          }
+        ],
+        "notes": [
+          "pipeline.Run consumes its observation channel one at a time and calls process on each — there is no accumulation buffer, no ticker and no batch size in the ingest path. The one scheduled loop in the system is the notification outbox drain, which only ever handles alerts that immediate delivery already failed or rate-limited."
+        ],
+        "measurement_duration_ms": 9761.6215
+      }
+    },
+    {
+      "id": "C-09",
+      "title": "Substring issuer matching survives CA rotation",
+      "claim": "Expected-issuer policy is a case-insensitive substring match on issuer DN/O, because exact matching would page you on every intermediate rotation.",
+      "sources": [
+        {
+          "file": "src/components/Pillars.astro",
+          "probes": [
+            "\"Expected-issuer policy is a case-insensitive substring match on issuer DN/O"
+          ]
+        }
+      ],
+      "threshold": "0 false criticals across a year of simulated renewals spanning intermediate rotations, where exact-match comparison produces a measured non-zero count on the same corpus",
+      "result": {
+        "claim_id": "C-09",
+        "verdict": "PASS",
+        "headline": "0 false criticals over 138 legitimate renewals; exact-DN matching would have raised 138",
+        "metrics": [
+          {
+            "name": "renewals",
+            "value": 138,
+            "unit": "certificates"
+          },
+          {
+            "name": "false_criticals_substring",
+            "value": 0,
+            "unit": "alerts",
+            "note": "the shipped comparison"
+          },
+          {
+            "name": "classified_routine",
+            "value": 276,
+            "unit": "matches",
+            "note": "severity info — recorded, nobody paged"
+          },
+          {
+            "name": "matches_recorded",
+            "value": 276,
+            "unit": "matches",
+            "note": "two per renewal: the apex and the www SAN"
+          },
+          {
+            "name": "false_criticals_exact_dn",
+            "value": 138,
+            "unit": "alerts",
+            "note": "exact equality against the issuer DN"
+          },
+          {
+            "name": "false_criticals_exact_org",
+            "value": 51,
+            "unit": "alerts",
+            "note": "exact equality against O= — \"DigiCert Inc\" is not \"DigiCert\""
+          },
+          {
+            "name": "false_criticals_case_sensitive",
+            "value": 17,
+            "unit": "alerts",
+            "note": "substring, but case-sensitive"
+          },
+          {
+            "name": "alerts_delivered",
+            "value": 276,
+            "unit": "webhook posts"
+          }
+        ],
+        "notes": [
+          "Every certificate in this corpus is legitimate. The measurement is entirely about how many of them a comparison strategy would have woken someone up for.",
+          "Exact O= matching survives Let's Encrypt's intermediate rotations and still fails 51 times, because the configured pattern \"DigiCert\" is not the string \"DigiCert Inc\" — which is the failure mode substring matching exists to avoid."
+        ],
+        "measurement_duration_ms": 3774.531166
+      }
+    },
+    {
+      "id": "C-10",
+      "title": "sha256(DER) dedup, never the serial",
+      "claim": "Dedup keys on sha256 of the DER, never the certificate serial, because serials collide across CAs and would under-count real issuances.",
+      "sources": [
+        {
+          "file": "src/components/Pillars.astro",
+          "probes": [
+            "\"Dedup keys on sha256(DER), never the certificate serial"
+          ]
+        },
+        {
+          "file": "src/components/Correctness.astro",
+          "probes": [
+            "title: \"Dedup on sha256(DER), never serial\","
+          ]
+        }
+      ],
+      "threshold": "0 certificates merged or lost under sha256(DER) on a corpus containing cross-CA serial collisions, where serial-keyed dedup under-counts by a measured margin; one alert per issuance across its 2–6 log sightings",
+      "result": {
+        "claim_id": "C-10",
+        "verdict": "PASS",
+        "headline": "1,000 certificates with 50% colliding serials stored without a single false merge; one issuance seen in 6 logs produced 1 alert",
+        "metrics": [
+          {
+            "name": "certificates_posted",
+            "value": 1000,
+            "unit": "certificates"
+          },
+          {
+            "name": "certificate_rows_sha256",
+            "value": 1000,
+            "unit": "rows",
+            "note": "the shipped dedup key"
+          },
+          {
+            "name": "certificate_rows_if_keyed_on_serial",
+            "value": 500,
+            "unit": "rows"
+          },
+          {
+            "name": "undercount_if_keyed_on_serial",
+            "value": 50,
+            "unit": "%",
+            "note": "certificates that would have vanished into a collision"
+          },
+          {
+            "name": "log_sightings",
+            "value": 6,
+            "unit": "sightings"
+          },
+          {
+            "name": "certificate_rows_from_sightings",
+            "value": 1,
+            "unit": "rows"
+          },
+          {
+            "name": "observation_rows_from_sightings",
+            "value": 6,
+            "unit": "rows",
+            "note": "provenance kept for every sighting"
+          },
+          {
+            "name": "match_rows_from_sightings",
+            "value": 1,
+            "unit": "rows"
+          },
+          {
+            "name": "alerts_from_sightings",
+            "value": 1,
+            "unit": "alerts",
+            "note": "the anti-fatigue property this claim is really about"
+          }
+        ],
+        "notes": [
+          "A 50% collision rate is deliberately adversarial. The point is the shape of the failure: serial-keyed dedup does not merely mislabel a colliding pair, it silently drops one of them — the certificate that never gets stored is also the one that never gets matched.",
+          "Every sighting is still recorded as an observation row, so which logs carried an issuance stays answerable; what deduplicates is the alerting, not the provenance."
+        ],
+        "measurement_duration_ms": 4612.578833
+      }
+    },
+    {
+      "id": "C-11",
+      "title": "A-label normalization catches IDN homoglyphs",
+      "claim": "Names normalize to punycode/A-label before comparison, matching how SANs are encoded on the wire; comparing Unicode against them matches nothing and fails silently.",
+      "sources": [
+        {
+          "file": "src/components/Pillars.astro",
+          "probes": [
+            "\"Domains normalize to punycode/A-label before comparison, matching how SANs are actually encoded on the wire.\","
+          ]
+        },
+        {
+          "file": "src/components/Correctness.astro",
+          "probes": [
+            "title: \"Punycode/A-label normalization\","
+          ]
+        }
+      ],
+      "threshold": "100% detection of IDN-homoglyph certificates presented as wire-format A-labels, against a measured detection rate for the naive Unicode comparison on the same corpus",
+      "result": {
+        "claim_id": "C-11",
+        "verdict": "PASS",
+        "headline": "100.0% of 108,386 IDN homoglyph lookalikes detected as they appear on the wire; 0.0% with Unicode watch keys",
+        "metrics": [
+          {
+            "name": "idn_variants_in_watch_set",
+            "value": 108386,
+            "unit": "names"
+          },
+          {
+            "name": "detection_rate_a_label",
+            "value": 100,
+            "unit": "%",
+            "note": "the shipped normalization"
+          },
+          {
+            "name": "detection_rate_unicode_keys",
+            "value": 0,
+            "unit": "%",
+            "note": "comparing wire A-labels against Unicode keys"
+          },
+          {
+            "name": "real_certificates_detected",
+            "value": 50,
+            "unit": "of 50"
+          }
+        ],
+        "notes": [
+          "The failure mode this prevents is the quiet one: a Unicode-keyed watch set raises no error and logs nothing, it simply never matches. Both implementations look identical in a dashboard until an actual homoglyph certificate appears.",
+          "Example from the set: xn--80ajb1au1a38g.com (ехамрӏе.com)."
+        ],
+        "measurement_duration_ms": 113.828208
+      }
+    },
+    {
+      "id": "C-12",
+      "title": "PSL reduction catches subdomain phishing",
+      "claim": "Variant lookups reduce through the Public Suffix List to eTLD+1 first, so login.secure-paypaI.com still resolves back to the watched variant.",
+      "sources": [
+        {
+          "file": "src/components/Correctness.astro",
+          "probes": [
+            "title: \"Public Suffix List aware\",",
+            "so login.secure-paypaI.com still resolves back to the watched variant."
+          ]
+        }
+      ],
+      "threshold": "100% detection of certificates issued on subdomains of a watched variant, including multi-label public suffixes, against a measured rate for exact-name comparison",
+      "result": {
+        "claim_id": "C-12",
+        "verdict": "PASS",
+        "headline": "100.0% of 9,985 subdomain-hosted lookalike certificates detected (0.0% without PSL reduction), including 3/3 multi-label public suffixes",
+        "metrics": [
+          {
+            "name": "probes",
+            "value": 9985,
+            "unit": "certificates"
+          },
+          {
+            "name": "detection_rate_psl",
+            "value": 100,
+            "unit": "%",
+            "note": "the shipped eTLD+1 reduction"
+          },
+          {
+            "name": "detection_rate_exact_name",
+            "value": 0,
+            "unit": "%",
+            "note": "matching the full SAN against watch entries"
+          },
+          {
+            "name": "multi_label_suffixes_detected",
+            "value": 3,
+            "unit": "of 3"
+          },
+          {
+            "name": "multi_label_detected_by_last_two_labels",
+            "value": 0,
+            "unit": "of 3",
+            "note": "the shortcut that looks like PSL handling until it isn't"
+          }
+        ],
+        "notes": [
+          "login.secure-paypaI.com — the example on the site — is the whole point: phishing certificates are issued on subdomains, and a watch set of registrable domains only meets them if SANs are reduced through the public suffix list first."
+        ],
+        "measurement_duration_ms": 12.572792
+      }
+    },
+    {
+      "id": "C-13",
+      "title": "Scoring is additive and explainable",
+      "claim": "Risk scoring is a documented additive rule set, not a black-box model: every score is explainable back to the signals that produced it.",
+      "sources": [
+        {
+          "file": "src/components/Correctness.astro",
+          "probes": [
+            "title: \"Transparent, additive scoring\",",
+            "Every score is explainable back to the specific signals that produced it."
+          ]
+        }
+      ],
+      "threshold": "every scored match carries components that sum to its score (modulo the documented 0–100 clamp) and reproduces bit-identically on a second pass",
+      "result": {
+        "claim_id": "C-13",
+        "verdict": "PASS",
+        "headline": "100.0% of 2,000 persisted findings reproduce their score exactly from their stored components",
+        "metrics": [
+          {
+            "name": "matches_scored",
+            "value": 2000,
+            "unit": "findings"
+          },
+          {
+            "name": "matches_total_reported_by_store",
+            "value": 2000,
+            "unit": "findings"
+          },
+          {
+            "name": "score_equals_sum_of_components",
+            "value": 100,
+            "unit": "%"
+          },
+          {
+            "name": "carry_at_least_one_component",
+            "value": 100,
+            "unit": "%"
+          },
+          {
+            "name": "clamped_at_bounds",
+            "value": 0,
+            "unit": "findings",
+            "note": "the documented 0–100 clamp, the only permitted divergence"
+          },
+          {
+            "name": "reproducible",
+            "value": 500,
+            "unit": "of 500"
+          },
+          {
+            "name": "distinct_signals_observed",
+            "value": 6,
+            "unit": "signals",
+            "note": "credential_keyword 400, deceptive_algorithm 728, routine_issuance 400, unexpected_issuer 400, validity_exceeds_policy 400, variant_hit 800"
+          }
+        ],
+        "notes": [
+          "Explainability here means the stored record, not the code: each match carries its components as JSONB, so a finding from six months ago can still be read back after the weights have been retuned."
+        ],
+        "measurement_duration_ms": 4720.298792
+      }
+    },
+    {
+      "id": "C-14",
+      "title": "Cold start",
+      "claim": "Self-hosting is a five-minute job.",
+      "sources": [
+        {
+          "file": "src/components/Hero.astro",
+          "probes": [
+            "Self-host in 5 minutes"
+          ]
+        }
+      ],
+      "threshold": "an instance goes from config file to serving the observation hook in ≤ 5s — the process-side component of the five minutes; image pull and editing config.yaml are out of scope",
+      "result": {
+        "claim_id": "C-14",
+        "verdict": "PASS",
+        "headline": "config file to serving the observation hook in 3.683s with a 115,461-name watch set (6ms with none)",
+        "metrics": [
+          {
+            "name": "cold_start_full_watch_set",
+            "value": 3683,
+            "unit": "ms"
+          },
+          {
+            "name": "cold_start_domains_only",
+            "value": 6,
+            "unit": "ms"
+          },
+          {
+            "name": "watch_set_cost",
+            "value": 3676,
+            "unit": "ms",
+            "note": "what 115,438 variants add to startup"
+          },
+          {
+            "name": "budget",
+            "value": 5000,
+            "unit": "ms",
+            "note": "the process-side allowance out of the five minutes"
+          }
+        ],
+        "notes": [
+          "The five minutes on the site is a human number: docker compose pull, generating two secrets, and editing expected_issuers into config.yaml. Only the last step is judgement, and only the process side of it is measurable here.",
+          "Variant generation is not in this number. It runs against the dnstwist sidecar after boot, and on this machine took 3.657s for the 20-domain estate — a first-run cost, not a restart cost."
+        ],
+        "measurement_duration_ms": 3689.593541
+      }
+    }
+  ]
+}
