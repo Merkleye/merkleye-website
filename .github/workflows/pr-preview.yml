@@ -39,7 +39,7 @@ jobs:
       # are the parts that are actually this repo's.
       - name: Deploy preview to Cloudflare Pages
         id: deploy
-        uses: Merkleye/github-templates/.github/actions/cf-pages-deploy@v1
+        uses: Merkleye/github-templates/.github/actions/cf-pages-deploy@main
         with:
           project-name: merkleye-website
           directory: dist
