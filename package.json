@@ -30,7 +30,7 @@
     "jsdom": "^30.0.1",
     "puppeteer-core": "^25.9.0",
     "tailwindcss": "^4.1.6",
-    "typescript": "^6.0.0",
+    "typescript": "^7.0.0",
     "vitest": "^4.1.11",
     "wrangler": "^4.125.0"
   }
