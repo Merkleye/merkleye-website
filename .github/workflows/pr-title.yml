@@ -1,19 +1,5 @@
 # Validates that pull request titles follow the Conventional Commits spec
-# (https://www.conventionalcommits.org). This repo squash-merges, so the PR
-# title becomes the commit subject on main — and the same convention is what
-# lets the org read one changelog across repos.
-#
-# The rules live in Merkleye/github-templates so the allowed type list is
-# maintained once for every Merkleye repo rather than drifting per repo.
-#
-# pull_request, not pull_request_target: the latter reads the workflow file
-# from the base branch, so a workflow that exists only on a PR branch never
-# runs at all -- the PR adding this check would get no signal from it, and it
-# would only start working after that PR merged. This way the adopting PR is
-# its own proof. Worth revisiting once it is on main: this repo is public, and
-# pull_request_target would pin the rules to the base branch so a fork PR
-# cannot edit them. Nothing here checks out or executes PR code, so both are
-# safe.
+# (https://www.conventionalcommits.org)
 name: PR Title
 
 on:
