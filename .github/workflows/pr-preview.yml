@@ -43,30 +43,23 @@ jobs:
           CHROME_PATH: /usr/bin/google-chrome-stable
         run: npm run verify:headers
 
-      - name: Record deploy time
-        id: timestamp
-        run: echo "now=$(date -u +'%Y-%m-%d %H:%M:%S UTC')" >> "$GITHUB_OUTPUT"
-
+      # Deploy and the sticky preview comment come from the shared template
+      # — they were identical to Merkleye/design's, down to the comment body.
+      # The build and header check above and the Lighthouse gate below stay
+      # here, because they are the parts that are actually this repo's.
+      #
+      # main's "Record deploy time" step is gone rather than dropped: the
+      # action timestamps the comment itself, so keeping it here would have
+      # left an unused step output behind.
       - name: Deploy preview to Cloudflare Pages
         id: deploy
-        uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4
+        uses: Merkleye/github-templates/.github/actions/cf-pages-deploy@main
         with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy dist --project-name=merkleye-website --branch=pr-${{ github.event.pull_request.number }}
-
-      - name: Comment preview link on PR
-        uses: marocchino/sticky-pull-request-comment@5770ad5eb8f42dd2c4f34da00c94c5381e49af88 # v3.0.5
-        with:
-          header: pr-preview
-          message: |
-            **Preview deployed:** ${{ steps.deploy.outputs.pages-deployment-alias-url }}
-
-            Commit: ${{ github.event.pull_request.head.sha }}
-            Diff: https://github.com/${{ github.repository }}/compare/main...${{ github.event.pull_request.head.sha }}
-            Last updated: ${{ steps.timestamp.outputs.now }}
-
-            This link stays the same across pushes to this PR and is removed once the PR is closed.
+          project-name: merkleye-website
+          directory: dist
+          branch: pr-${{ github.event.pull_request.number }}
+          api-token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          account-id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
       # Runs after the sticky preview-link comment above so that comment keeps
       # its own header/thread; Lighthouse gets its own sticky comment below.
